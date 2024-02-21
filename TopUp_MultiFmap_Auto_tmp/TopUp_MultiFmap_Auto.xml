@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Pipeline xmlns="http://nrg.wustl.edu/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/pipeline ..\schema\pipeline.xsd" >
-    <name>DicomToBIDS_FMap</name>
-    <location>DicomToBIDS_FMap</location>
-    <description>Same as DicomToBIDS, with FieldMap Norm choice as parameter.</description>
+    <name>TopUp_MultiFmap_Auto</name>
+    <location>TopUp_MultiFmap_Auto</location>
+    <description>Automatic launch of Topup over Multiple fieldmaps if formatted according to CERIMED</description>
     <documentation>
         <authors>
             <author>
-                <lastname>Wallace</lastname>
-                <firstname>Lauren</firstname>
+                <lastname>Meunier</lastname>
+                <firstname>David</firstname>
                 <contact>
-                    <email>laurenwallace@wustl.edu</email>
+                    <email>david.meunier@univ-amu.fr</email>
                 </contact>
             </author>
         </authors>
@@ -22,19 +22,12 @@
                 </values>
                 <description>If a scan has a preexisting NIFTI resource, it can be deleted and a new one uploaded, or it can be left alone. Set this to Y to overwrite, or to N to leave existing resource in place.</description>
             </parameter>
-	    <parameter>
-                <name>normFieldMap</name>
-                <values>
-                    <csv>Y</csv>
-                </values>
-                <description>Use the normalized field map or not</description>
-            </parameter>
             <parameter>
                 <name>subject_num</name>
                 <values>
-                    <schemalink>xnat:imageSessionData/dcmPatientName</schemalink> 
+                    <schemalink>xnat:imageSessionData/dcmPatientId</schemalink>
                 </values>
-                <description>Subject number as encoded in the dcmPatientName.</description>
+                <description>Subject number as encoded in the dcmPatientId.</description>
             </parameter>
         </input-parameters>
     </documentation>
@@ -53,30 +46,23 @@
             </values>
         </parameter>
         <parameter>
-            <name>rawdir</name>
+            <name>topupdir</name>
             <values>
-                <unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/RAW')^</unique>
+                <unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/TOPUP')^</unique>
             </values>
         </parameter>
         <parameter>
-            <name>niidir</name>
+            <name>niftidir</name>
             <values>
                 <unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/NIFTI')^</unique>
             </values>
         </parameter>
-        <!--<parameter>
-            <name>subject_num</name>
-            <values>
-                <unique>sub-04</unique>
-            </values>
-            <description>Subject number as encoded in the dcmPatientName.</description>
-            </parameter>-->
     </parameters>
     <steps>
         <step id="MKDIR" description="Create directory structure" workdirectory="^/Pipeline/parameters/parameter[name='workdir']/values/unique/text()^">
             <resource name="mkdir" location="commandlineTools" >
                 <argument id="dirname">
-                    <value>RAW</value>
+                    <value>TOPUP</value>
                 </argument>
             </resource>
             <resource name="mkdir" location="commandlineTools" >
@@ -86,7 +72,7 @@
             </resource>
         </step>
         <step id="RUN" description="Download all DICOMs. Convert each series into a 4d NIFTI file with BIDS supplements using dcm2niix. Upload NIFTI file." workdirectory="^/Pipeline/parameters/parameter[name='workdir']/values/unique/text()^">
-            <resource name="dcm2bids_wholeSession" location="DicomToBIDS_FmapNorm/resources">
+            <resource name="topup_multifmap_auto_wholeSession" location="TopUp_MultiFmap_Auto/resources">
                 <argument id="host">
                     <value>^/Pipeline/parameters/parameter[name='host']/values/unique/text()^</value>
                 </argument>
@@ -99,10 +85,10 @@
                 <argument id="session">
                     <value>^/Pipeline/parameters/parameter[name='id']/values/unique/text()^</value>
                 </argument>
-		<argument id="project">
+                <argument id="project">
                     <value>^/Pipeline/parameters/parameter[name='project']/values/unique/text()^</value>
                 </argument>
-		<argument id="subject">
+                <argument id="subject">
                     <value>^/Pipeline/parameters/parameter[name='subject_num']/values/unique/text()^</value>
                 </argument>
                 <argument id="workflowId">
@@ -111,26 +97,14 @@
                 <argument id="overwrite">
                     <value>^/Pipeline/parameters/parameter[name='overwrite']/values/unique/text()^</value>
                 </argument>
-		<argument id="normFieldMap">
-                    <value>^/Pipeline/parameters/parameter[name='normFieldMap']/values/unique/text()^</value>
-                </argument>
                 <argument id="upload-by-ref">
                     <value>True</value>
                 </argument>
                 <argument id="niftidir">
-                    <value>NIFTI</value>
+                    <value>^/Pipeline/parameters/parameter[name='niftidir']/values/unique/text()^</value>
                 </argument>
-                <argument id="dicomdir">
-                    <value>RAW</value>
-                </argument>
-            </resource>
-        </step>
-        <step id="CLEANUP" description="Remove RAW directory" workdirectory="^/Pipeline/parameters/parameter[name='workdir']/values/unique/text()^">
-            <resource name="rm" location="commandlineTools" >
-                <argument id="r"/>
-                <argument id="f"/>
-                <argument id="file">
-                    <value>RAW</value>
+                <argument id="topupdir">
+                    <value>^/Pipeline/parameters/parameter[name='topupdir']/values/unique/text()^</value>
                 </argument>
             </resource>
         </step>

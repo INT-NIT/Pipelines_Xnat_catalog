@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ pipeline: webservice.xml
+  ~ XNAT http://www.xnat.org
+  ~ Copyright (c) 2017, Washington University School of Medicine
+  ~ All Rights Reserved
+  ~
+  ~ Released under the Simplified BSD.
+  -->
+
+<pip:Resource xmlns:pip="http://nrg.wustl.edu/pipeline">
+	<pip:name>webservice</pip:name>
+	<pip:type>WebService</pip:type>
+	<pip:description>Use this resource to launch a webservice</pip:description>
+	<pip:input>
+		<pip:argument id="endpoint">
+			<pip:description>Webservice URL </pip:description>
+		</pip:argument>
+		<pip:argument id="nameSpace">
+			<pip:description>Name Space</pip:description>
+		</pip:argument>
+		<pip:argument id="methodName">
+			<pip:description>Name of the method which is to be invoked</pip:description>
+		</pip:argument>
+		<pip:argument id="input">
+			<pip:description>Input to the method</pip:description>
+		</pip:argument>
+		<pip:argument id="userName">
+			<pip:description>User name</pip:description>
+		</pip:argument>
+		<pip:argument id="password" isSensitive="true">
+			<pip:description>password</pip:description>
+		</pip:argument>
+	</pip:input>
+</pip:Resource>

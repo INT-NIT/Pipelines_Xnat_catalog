@@ -91,7 +91,6 @@ parser.add_argument("--project", help="Project", required=False)
 parser.add_argument("--dicomdir", help="Root output directory for DICOM files", required=True)
 parser.add_argument("--niftidir", help="Root output directory for NIFTI files", required=True)
 parser.add_argument("--overwrite", help="Overwrite NIFTI files if they exist")
-parser.add_argument("--normFieldMap", help="Overwrite NIFTI files if they exist")
 parser.add_argument("--upload-by-ref", help="Upload \"by reference\". Only use if your host can read your file system.")
 parser.add_argument("--workflowId", help="Pipeline workflow ID")
 parser.add_argument('--version', action='version', version='%(prog)s 1')
@@ -107,10 +106,6 @@ niftidir = args.niftidir
 workflowId = args.workflowId
 uploadByRef = isTrue(args.upload_by_ref)
 dcm2niixArgs = unknown_args if unknown_args is not None else []
-
-### to do in DicomToBIDS
-normFieldMap = isTrue(args.normFieldMap)
-print("normFieldMap: ", normFieldMap)
 
 imgdir = niftidir + "/IMG"
 bidsdir = niftidir + "/BIDS"
@@ -170,8 +165,7 @@ print "Get scan list for session ID %s." % session
 r = get(host + "/data/experiments/%s/scans" % session, params={"format": "json"})
 scanRequestResultList = r.json()["ResultSet"]["Result"]
 scanIDList = [scan['ID'] for scan in scanRequestResultList]
-seriesDescList = [scan['series_description'] for scan in scanRequestResultList]
- # { id: sd for (scan['ID'], scan['series_description']) in scanRequestResultList }
+seriesDescList = [scan['series_description'] for scan in scanRequestResultList]  # { id: sd for (scan['ID'], scan['series_description']) in scanRequestResultList }
 print 'Found scans %s.' % ', '.join(scanIDList)
 print 'Series descriptions %s' % ', '.join(seriesDescList)
 
@@ -196,8 +190,7 @@ else:
     print "Could not read site-wide BIDS map"
 
 print "Get project BIDS map if one exists"
-r = sess.get(host + "/data/projects/%s/config/bids/bidsmap" % project,
-params={"contents": True})
+r = sess.get(host + "/data/projects/%s/config/bids/bidsmap" % project, params={"contents": True})
 print r.text
 if r.ok:
     bidsmaptoadd = r.json()
@@ -235,9 +228,8 @@ for x in seriesDescList:
 bidscount = collections.Counter(resolved)
 
 # Remove multiples
-multiples = {seriesdesc: count for seriesdesc, count in bidscount.viewitems() if (count > 1 and not seriesdesc.startswith("task-"))}
-
-print (multiples)
+multiples = {seriesdesc: count for seriesdesc, count in bidscount.viewitems()
+if (count > 1 and not seriesdesc.startswith("task-"))}
 
 # Cheat and reverse scanid and seriesdesc lists so numbering is in the right order
 for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
@@ -266,30 +258,13 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
     if seriesdesc.startswith("task-"):
         match = seriesdesc
-        if seriesdesc.split("_")[-1] != "bold":
-            match = match + "_bold"
     else:
-        if val == "sbref":
-            continue
-        else:
-            match = val
+        match = val
 
     # split before last _
     splitname = match.split("_")
 
-    # special task
-    # capitalize sSBREF
-    if splitname[-1] == "SBRef":
-        splitname[-1] = "sbref"
-
-    if any([atom == "bold" for atom in splitname[:-1]]):
-        splitname.remove('bold')
-
-    print(splitname)
-    match = "_".join(splitname)
-
     # Check for multiples
-    #if match in multiples and not "epi" in splitname: ### not sure why there is epi here
     if match in multiples:
         # insert run-0x
         run = 'run-%02d' % multiples[match]
@@ -300,33 +275,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
         # rejoin as string
         bidsname = "_".join(splitname)
-
-        print("****Multiple****" ,bidsname)
-
-
     else:
-        list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
-            for atom in splitname]
-        print list_run
-        if any(list_run):
-
-            print("**** found error with run name: %s"%match)
-
-            index = list_run.index(True)
-            run_atom = splitname[index]
-            print("run_atom: ", run_atom)
-
-            run_index = run_atom.strip('run')
-
-            print("run_index: ", run_index)
-            assert run_index.isdigit(), "Error %s should be digit" %run_index
-
-            splitname[index] = "run-%02d"%int(run_index)
-            bidsname = "_".join(splitname)
-            print ("**** final name :%s"%bidsname)
-
-        else:
-            bidsname = match
+        bidsname = match
 
     # Get scan resources
     print "Get scan resources for scan %s." % scanid
@@ -394,7 +344,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     for f in os.listdir(scanDicomDir):
         os.remove(os.path.join(scanDicomDir, f))
 
-
     ##########
     # Get list of DICOMs/IMAs
 
@@ -459,29 +408,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print 'Could not read modality from DICOM headers. Skipping.'
             continue
 
-
-    ############################################## special case of fieldmap
-
-    temp_delete = False
-
-    if "epi" in splitname and usingDicom:
-        print '****** Checking fieldmap in DICOM headers of file %s.' % name
-        d = dicomLib.read_file(name)
-        fieldMadHeader = d.get((0x0008, 0x0008), None)
-        print(fieldMadHeader)
-
-        if "NORM" in fieldMadHeader and not normFieldMap:
-            print("***** Norm found but not expected, skipping...")
-            temp_delete= True
-        elif not "NORM" in fieldMadHeader and normFieldMap:
-            print("***** Norm not found but expected, skipping...")
-            temp_delete=True
-        else:
-            print("***** Found corresponding normFieldMap")
-
-    if temp_delete:
-        continue
-
     ##########
     # Download remaining DICOMs
     for name, pathDict in dicomFileList[1:]:
@@ -512,11 +438,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         os.remove(os.path.join(scanImgDir, f))
 
     # Convert the differences
-
-    if "BOLD_ME" in seriesdesc:
-        base = base + "echo-%e_"
-        print (base)
-
     bidsname = base + bidsname
     print "Base " + base + " series " + seriesdesc + " match " + bidsname
 
@@ -527,30 +448,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         dcm2niix_command = "dcm2niix -b y -z y".split() + dcm2niixArgs + " -f {} -o {} {}".format(bidsname, scanBidsDir, scanDicomDir).split()
         print "Executing command: " + " ".join(dcm2niix_command)
         print subprocess.check_output(dcm2niix_command)
-
-        ### Modify json if task-
-        list_task = [atom.startswith("task") and len(atom.split("-"))== 2 \
-            for atom in splitname]
-
-        if any(list_task):
-
-            task = splitname[list_task.index(True)].split("-")[1]
-
-            print("**** found task- with run name: %s"%task)
-
-            json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
-
-
-
-            new_json_contents = {'TaskName': task}
-
-            with open(json_bids_file) as f:
-                data = json.load(f)
-
-            data.update(new_json_contents)
-
-            with open(json_bids_file, 'w') as f:
-                json.dump(data, f)
     else:
         # call dcm2nii for converting ima files
         print subprocess.check_output("dcm2nii -b @PIPELINE_DIR_PATH@/catalog/DicomToBIDS/resources/dcm2nii.ini -g y -f Y -e N -p N -d N -o {} {}".format(scanBidsDir, scanDicomDir).split())
@@ -625,6 +522,56 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     for f in os.listdir(scanBidsDir):
         if "nii" in f:
             os.rename(os.path.join(scanBidsDir, f), os.path.join(scanImgDir, f))
+
+    # Check number of files in image directory, if more than one assume multiple echoes
+    numechoes = len(os.listdir(scanImgDir))  # multiple .nii.gz files will be generated by dcm2niix if there are multiple echoes
+    if numechoes > 1:
+        # Loop through set of folders (IMG and BIDS)
+        for dir in (scanImgDir, scanBidsDir):
+            # Get sorted list of files
+            multiple_echoes = sorted(os.listdir(dir))
+
+            # Divide length of file list by number of echoes to find out how many files in each echo
+            # (Multiband DWI would have BVEC, BVAL, and JSON in BIDS dir for each echo)
+            filesinecho = len(multiple_echoes) / numechoes
+
+            echonumber = 1
+            filenumber = 1
+
+            # Rename files
+            for echo in multiple_echoes:
+                splitname = echo.split("_")
+
+                # Locate run if present in BIDS name
+                runstring = [s for s in splitname if "run" in s]
+
+                if runstring != []:
+                    runindex = splitname.index(runstring[0])
+                    splitname.insert(runindex, "echo-" + str(echonumber))  # insert where run is (will displace run to later position)
+                else:
+                    splitname.insert(-1, "echo-" + str(echonumber))  # insert right before the data type
+
+                # Remove the "a" or other character from before the .nii.gz if not on the first echo
+                if (echonumber > 1):
+                    ending = splitname[-1].split(".")
+                    cleanedtype = ending[0][:-1]
+                    ending[0] = cleanedtype
+                    cleanedname = ".".join(ending)
+                    splitname[-1] = cleanedname
+
+                # Rejoin name
+                echoname = "_".join(splitname)
+
+                # Do file rename
+                os.rename(os.path.join(dir, echo), os.path.join(dir, echoname))
+
+                # When file count rolls over increment echo and continue
+                if filenumber == filesinecho:
+                    echonumber += 1
+                    filenumber = 1  # restart count for new echo
+
+                # Increment file count each time one is renamed
+                filenumber += 1
 
     ##########
     # Upload results

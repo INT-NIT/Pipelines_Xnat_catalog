@@ -57,8 +57,8 @@ with open(json_AP_file) as f:
     RT= json_AP["TotalReadoutTime"]
     direction_AP=json_AP['PhaseEncodingDirection']
 
-    #assert direction_AP == "j-", \
-        #("Error, AP file should be 'j-' (now {})".format(direction_AP))
+    assert direction_AP == "j-", \
+        ("Error, AP file should be 'j-' (now {})".format(direction_AP))
 
 phase_AP = '0 -1 0'
 phase_PA = '0 1 0'

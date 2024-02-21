@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Pipeline xmlns="http://nrg.wustl.edu/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/pipeline ..\schema\pipeline.xsd" >
-    <name>DicomToBIDS_FMapNorm_Topup</name>
-    <location>DicomToBIDS_FMapNorm_Topup</location>
-    <description>Same as DicomToBIDS_FMapNorm, followed by TopUp.</description>
+    <name>DicomToBIDS_FMap</name>
+    <location>DicomToBIDS_FMap</location>
+    <description>Same as DicomToBIDS, with FieldMap Norm choice as parameter.</description>
     <documentation>
         <authors>
             <author>
@@ -32,7 +32,7 @@
             <parameter>
                 <name>subject_num</name>
                 <values>
-                    <schemalink>xnat:imageSessionData/dcmPatientID</schemalink>
+                    <schemalink>xnat:imageSessionData/dcmPatientName</schemalink> 
                 </values>
                 <description>Subject number as encoded in the dcmPatientName.</description>
             </parameter>

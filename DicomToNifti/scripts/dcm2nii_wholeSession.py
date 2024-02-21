@@ -196,6 +196,8 @@ for scanid in scanIDList:
     print 'Converting scan %s to NIFTI...' % scanid
     # Do some stuff to execute dcm2niix as a subprocess
     print subprocess.check_output("dcm2niix -z n -f %i_%p_%s -o {} {}".format(scanNiftiDir, scanDicomDir).split())
+    ## Special G. Auzias
+    #print subprocess.check_output("dcm2niix -i y -z i -f %p_%s -o {} {}".format(scanNiftiDir, scanDicomDir).split())
     print 'Done.'
 
     ##########
