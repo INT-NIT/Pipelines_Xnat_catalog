@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ pipeline: optiBET.xml
+  ~ XNAT http://www.xnat.org
+	David Meunier david.meunier@univ-amu.fr
+	Inspired dcm2niix.xml, from license:
+  ~ Copyright (c) 2017, Washington University School of Medicine
+  ~ All Rights Reserved
+  ~
+  ~ Released under the Simplified BSD.
+  -->
+<Resource xmlns="http://nrg.wustl.edu/pipeline">
+	<name>/bin/bash /usr/local/bin/optiBET.sh</name>
+	<type>Executable</type>
+	<description>Monti's lab optibet</description>
+	<input>
+		<argument id="infile">
+			<name>i</name>
+			<description>Input File</description>
+		</argument>
+		<!-- 
+		<argument id="output_filename_format">
+			<name>f</name>
+			<description>Option</description>
+		</argument>
+		-->
+	</input>
+</Resource>

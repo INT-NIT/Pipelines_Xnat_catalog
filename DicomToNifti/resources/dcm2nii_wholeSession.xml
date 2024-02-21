@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resource xmlns="http://nrg.wustl.edu/pipeline">
+    <name>dcm2nii_wholeSession.py</name>
+    <commandPrefix>source /data/xnat/pipeline/scripts/epd-python_setup.sh; source /data/xnat/pipeline/scripts/dcm2niix_setup.sh; python</commandPrefix>
+    <location>DicomToNifti/scripts</location>
+    <type>Executable</type>
+    <input>
+        <argument id="host" prefix="--">
+            <name>host</name>
+            <description>CNDA host</description>
+        </argument>
+        <argument id="user" prefix="--">
+            <name>user</name>
+            <description>CNDA username</description>
+        </argument>
+        <argument id="password" prefix="--" isSensitive="true">
+            <name>password</name>
+            <description>CNDA password</description>
+        </argument>
+        <argument id="session" prefix="--">
+            <name>session</name>
+            <description>Session ID</description>
+        </argument>
+        <argument id="dicomdir" prefix="--">
+            <name>dicomdir</name>
+            <description>Root DICOM directory</description>
+        </argument>
+        <argument id="niftidir" prefix="--">
+            <name>niftidir</name>
+            <description>Root NIFTI output directory</description>
+        </argument>
+        <argument id="overwrite" prefix="--">
+            <name>overwrite</name>
+            <description>If scan has preexisting NIFTI resource, should it be overwritten?</description>
+        </argument>
+        <argument id="workflowId" prefix="--">
+            <name>workflowId</name>
+            <description>Allows XNAT transactions to be attached to pipeline workflow.</description>
+        </argument>
+    </input>
+</Resource>

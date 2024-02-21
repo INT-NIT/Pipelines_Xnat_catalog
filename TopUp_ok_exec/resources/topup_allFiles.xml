@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resource xmlns="http://nrg.wustl.edu/pipeline">
+    <name>topup_wholeSession.py</name>
+    <commandPrefix>python</commandPrefix>
+    <location>TopUp/scripts</location>
+    <type>Executable</type>
+    <input>
+        <argument id="fmap_AP_file" prefix="--">
+            <name>fmap_AP_file</name>
+            <description>fmap_AP_file host</description>
+        </argument>
+        <argument id="fmap_PA_file" prefix="--">
+            <name>fmap_PA_file</name>
+            <description>fmap_PA_file host</description>
+        </argument>
+        <argument id="json_AP_file" prefix="--">
+            <name>json_AP_file</name>
+            <description>json_AP_file host</description>
+        </argument>
+	<argument id="json_PA_file" prefix="--">
+            <name>json_PA_file</name>
+            <description>json_PA_file host</description>
+        </argument>
+    </input>
+</Resource>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Pipeline xmlns="http://nrg.wustl.edu/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/pipeline ..\schema\pipeline.xsd" xmlns:fileUtils="http://www.xnat.org/java/org.nrg.imagingtools.utils.FileUtils">
+    <name>Topup</name>
+    <location>Topup</location>
+    <description>Topup on BIDS fieldmap AP-PA with Julien's script</description>
+    <documentation>
+        <authors>
+            <author>
+                <lastname>Meunier</lastname>
+                <firstname>David</firstname>
+                <contact>
+                    <email>david.meunier@univ-amu.fr</email>
+                </contact>
+            </author>
+        </authors>
+        <version>20180801</version>
+        <input-parameters>
+             <parameter>
+                <name>subject_id</name>
+                <values>
+                    <schemalink>xnat:imageSessionData/dcmPatientName</schemalink>
+                </values>
+                <description>Subject ID</description>
+            </parameter>
+            <parameter>
+                <name>fmap_scanid_AP</name>
+                <values>
+                    <csv>10</csv>
+                </values>
+                <description>AP fieldmap scan number</description>
+            </parameter> 
+             <parameter>
+                <name>fmap_scanid_PA</name>
+                <values>
+                   <csv>8</csv>
+                </values>
+                <description>PA fieldmap scan number</description>
+            </parameter>
+        </input-parameters>
+    </documentation>
+    <outputFileNamePrefix>^concat(/Pipeline/parameters/parameter[name='logdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='label']/values/unique/text())^</outputFileNamePrefix>
+    <parameters>
+        <parameter>
+            <name>workdir</name>
+            <values>
+                <unique>^concat(/Pipeline/parameters/parameter[name='builddir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='label']/values/unique/text())^</unique>
+            </values>
+        </parameter>
+        <parameter>
+            <name>logdir</name>
+            <values>
+                <unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/LOGS')^</unique>
+            </values>
+        </parameter>
+        <parameter>
+            <name>rawdir</name>
+            <values>
+                <unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/NIFTI')^</unique>
+            </values>
+        </parameter>
+    </parameters>
+    <steps>
+        <step id="MKDIR_NIFTI" description="Create NIFTI folder">
+            <resource name="mkdir" location="commandlineTools">
+                <argument id="dirname">
+                    <value>^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="GET_FMAP1_NII" description="Download FMAP1 NIFTI" workdirectory="^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+		<value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='fmap_scanid_AP']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="GET_FMAP2_NII" description="Download FMAP2 NIFTI" workdirectory="^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+		<value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='fmap_scanid_PA']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+	<step id="GET_FMAP1_JSON" description="Download FMAP1 JSON" workdirectory="^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+		<value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='fmap_scanid_AP']/values/unique/text(),'/resources/BIDS/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="GET_FMAP2_JSON" description="Download FMAP2 JSON" workdirectory="^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+		<value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='fmap_scanid_PA']/values/unique/text(),'/resources/BIDS/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="TOPUP" description="Apply TopUp on the 2 fieldmap files">
+            <resource name="topup" location="TopUp/resources">               
+                <argument id="niftidir">
+			<value>^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^</value>
+                </argument>
+                <argument id="subject_id">
+			<value>^/Pipeline/parameters/parameter[name='subject_id']/values/unique/text()^</value>
+                </argument>
+            </resource>
+            </step>
+    </steps>
+</Pipeline>

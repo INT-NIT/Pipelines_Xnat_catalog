@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Resource xmlns="http://nrg.wustl.edu/pipeline">
+    <name>topup_wholeSession.py</name>
+    <commandPrefix>python</commandPrefix>
+    <location>TopUp/scripts</location>
+    <type>Executable</type>
+    <input>
+        <argument id="subject_id" prefix="--">
+            <name>subject_id</name>
+            <description>subject_id</description>
+        </argument>
+        <argument id="niftidir" prefix="--">
+            <name>niftidir</name>
+            <description>niftidir</description>
+        </argument>
+        <argument id="topupdir" prefix="--">
+            <name>topupdir</name>
+            <description>topupdir</description>
+        </argument>
+    </input>
+</Resource>

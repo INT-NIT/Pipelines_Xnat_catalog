@@ -1,0 +1,39 @@
+E mail a Julien
+
+Modif DicomToBids_FmapNorm_TopUp.xml. Pour l'instant on garde les ressources/scripts correspondant aux originaux TopUp_Auto et DicomToBIDS_FmapNorm.
+
+Lancé sur la session 17 d' Apache (PRIMAVOICe) sur le 'vrai' Xnat
+
+Une erreur car deux etapes dans le xml s'appelle 'RUN'
+-> modifié RUN_topup pour le second
+
+Tourne (avec dcm2niix apparaiisant dans les processus) mais plante
+
+Probleme avec niidir et niftidir (ne posait pas de problemes mais etait deja present dans DicomToNifti_FMapNorm.xml, corrigé)
+-> fonctionne à present
+
+Non en fait suppression de l'avant derniere session dans l'interface graphique ("Reconstructions" disparait, et n'apparait pas non plus dans manage files, mais les données sont presentes dans PROCESSED)
+
+-> essaie avec :
+- suppression dans le script topup_auto_wholeSession de la partie delete pour TOPUP_MAG,
+- suppression de la partie workflow_id pour TOPUP_FMAP
+- ajout de /data/projects/%s§subjects/%s... dans les requetes sess. dans la partie TOPUP_JSON
+
+-> plante avec le subject qui est en fait le subject_num (DcmPatientID) -> sub-Apache_ses_18
+event_id of workflow Id = 4691
+
+On relance avec TOPUP_JSON comme avant.
+
+On a le meme souci avec la version de TopUp_Auto.xml (sans la partie dicomToNifti), les reconstructions sont perdues dans la GUI.
+
+On a une difference quand meme, si la partie sess.delete est supprimee (testé dans TOPUP_MAG), une nouvelle session (avec la date_heure) n'est pas recréée.
+
+Message au google groups de xnat_discussion : reponse de Charlie Moore en 15min: les noms de reconstructedImageData sont UNIQUES, réessai avec TOPUP_..._%s avec le subject (i.e. sub-Apache_ses_17)
+
+ 
+
+
+
+
+
+

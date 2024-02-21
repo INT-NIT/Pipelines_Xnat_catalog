@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ pipeline: bet.xml
+  ~ XNAT http://www.xnat.org
+  ~ Copyright (c) 2017, Washington University School of Medicine
+  ~ All Rights Reserved
+  ~
+  ~ Released under the Simplified BSD.
+  -->
+
+<pip:Resource xmlns:pip="http://nrg.wustl.edu/pipeline">
+	<pip:name>fsl5.0-bet</pip:name>
+	<pip:type>Executable</pip:type>
+	<pip:description>FMIB's Automated Segmentation Tool v3.53</pip:description>
+	<pip:input>
+		<pip:argument id="infile" >
+			<pip:description></pip:description>
+		</pip:argument>
+		<pip:argument id="outfile" >
+			<pip:description></pip:description>
+		</pip:argument>
+	</pip:input>
+</pip:Resource>

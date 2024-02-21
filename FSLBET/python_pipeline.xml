@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Pipeline xmlns="http://nrg.wustl.edu/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/pipeline ..\schema\pipeline.xsd" xmlns:ext="org.nrg.validate.utils.ProvenanceUtils" xmlns:fileUtils="http://www.xnat.org/java/org.nrg.imagingtools.utils.FileUtils">
+
+	<name>python_pipeline</name>
+	<!--Should be  Name of the pipeline XML file -->
+	<location>/data/xnat/pipeline/catalog/python_pipeline</location>
+	<!-- Filesystem path to the pipeline XML -->
+	<description>Pipeline to run on DICOMs</description>
+
+	<documentation>
+		<input-parameters>
+		    <parameter>
+		        <name>3DT1</name>
+		        <values>
+		            <schemalink>xnat:imageSessionData/scans/scan/ID</schemalink>
+		        </values>
+		        <description>Scan ids of the 3DT1 scans</description>
+		    </parameter>
+		    <parameter>
+		        <name>T2_FLAIR</name>
+		        <values>
+		            <schemalink>xnat:imageSessionData/scans/scan/ID</schemalink>
+		        </values>
+		        <description>Scan ids of the T2 FLAIR scans</description>
+		    </parameter>
+		    <parameter>
+		        <name>T2_STAR</name>
+		        <values>
+		            <schemalink>xnat:imageSessionData/scans/scan/ID</schemalink>
+		        </values>
+		        <description>Scan ids of the T2 STAR scans</description>
+		    </parameter>
+		    <parameter>
+		        <name>DTI</name>
+		        <values>
+		            <schemalink>xnat:imageSessionData/scans/scan/ID</schemalink>
+		        </values>
+		        <description>Scan ids of the DTI 50 scans</description>
+		    </parameter>
+		    <parameter>
+                <name>subject</name>
+                <values>
+                    <schemalink>xnat:imageSessionData/subject_ID</schemalink>
+                </values>
+                <description>Subject ID</description>
+            </parameter>
+		</input-parameters>
+	</documentation>
+	<outputFileNamePrefix>^concat(/Pipeline/parameters/parameter[name='logdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='label']/values/unique/text())^</outputFileNamePrefix>
+
+	<parameters>
+		<parameter>
+            <name>workdir</name>
+			<values>
+				<unique>^concat(/Pipeline/parameters/parameter[name='builddir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='label']/values/unique/text())^</unique>
+			</values>
+		</parameter>
+		<parameter>
+			<name>logdir</name>
+			<values>
+				<unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/LOGS')^</unique>
+			</values>
+		</parameter>
+		<parameter>
+			<name>rawdir</name>
+			<values>
+				<unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/RAW')^</unique>
+			</values>
+		</parameter>
+		<parameter>
+			<name>outputdir</name>
+			<values>
+				<unique>^concat(/Pipeline/parameters/parameter[name='workdir']/values/unique/text(),'/OUTPUT')^</unique>
+			</values>
+		</parameter>
+		<parameter>
+			<name>scandir</name>
+			<values>
+				<unique>^concat('/data/xnat/archive/',/Pipeline/parameters/parameter[name='project']/values/unique/text(),'/arc001/',/Pipeline/parameters/parameter[name='label']/values/unique/text(),'/SCANS/')^</unique>
+			</values>
+		</parameter>
+	</parameters>
+
+
+	<steps>
+		<step id="MKDIR_RAW" description="Create RAW folder">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^/Pipeline/parameters/parameter[name='rawdir']/values/unique/text()^</value>
+		        </argument>
+		    </resource>
+		</step>
+		<step id="MKDIR_OUTPUT" description="Create OUTPUT folder">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^/Pipeline/parameters/parameter[name='outputdir']/values/unique/text()^</value>
+		        </argument>
+		    </resource>
+		</step>
+		
+		
+		<step id="MKDIR_RAW_3DT1" description="Create 3DT1 folder in rawdir">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text())^</value>
+		        </argument>
+		    </resource>
+		</step>
+		<step id="GET_3DT1_NIFTIs" description="Download 3DT1 NIFTIs" workdirectory="^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text())^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="MOVE_3DT1_file" description="Rename the 3DT1 NIFTI file">
+		    <resource name="mv" location="commandlineTools">
+		        <argument id="source">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text(),'/*.nii')^</value>
+		        </argument>
+		        <argument id="destination">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text(),'/3DT1.nii')^</value>
+		        </argument>
+		    </resource>
+		</step>	
+		
+		
+		<step id="MKDIR_RAW_T2FLAIR" description="Create T2FLAIR folder in rawdir">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text())^</value>
+		        </argument>
+		    </resource>
+		</step>
+		<step id="GET_T2FLAIR_NIFTIs" description="Download T2_FLAIR NIFTIs" workdirectory="^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text())^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="MOVE_T2FLAIR_file" description="Rename the T2_FLAIR NIFTI file">
+		    <resource name="mv" location="commandlineTools">
+		        <argument id="source">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text(),'/*.nii')^</value>
+		        </argument>
+		        <argument id="destination">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text(),'/T2_FLAIR.nii')^</value>
+		        </argument>
+		    </resource>
+		</step>
+		
+		
+		<step id="MKDIR_RAW_T2STAR" description="Create T2STAR folder in rawdir">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text())^</value>
+		        </argument>
+		    </resource>
+		</step>
+		<step id="GET_T2STAR_NIFTIs" description="Download T2_STAR NIFTIs" workdirectory="^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text())^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="MOVE_T2STAR_file" description="Rename the T2_STAR NIFTI file">
+		    <resource name="mv" location="commandlineTools">
+		        <argument id="source">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text(),'/*.nii')^</value>
+		        </argument>
+		        <argument id="destination">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text(),'/T2_STAR.nii')^</value>
+		        </argument>
+		    </resource>
+		</step>
+		
+		
+		
+		<step id="MKDIR_RAW_DTI" description="Create DTI folder in rawdir">
+		    <resource name="mkdir" location="commandlineTools">
+		        <argument id="dirname">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text())^</value>
+		        </argument>
+		    </resource>
+		</step>
+		<step id="GET_DTI_NIFTIs" description="Download DTI NIFTIs" workdirectory="^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text())^">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="absolutePath"/>
+                <argument id="batch"/>
+                <argument id="method">
+                    <value>GET</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/experiments/',/Pipeline/parameters/parameter[name='id']/values/unique/text(),'/scans/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text(),'/resources/NIFTI/files"')^</value>
+                </argument>
+            </resource>
+        </step>
+        <step id="MOVE_DTI_file" description="Rename the DTI NIFTI file">
+		    <resource name="mv" location="commandlineTools">
+		        <argument id="source">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text(),'/*.nii')^</value>
+		        </argument>
+		        <argument id="destination">
+		            <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text(),'/DTI.nii')^</value>
+		        </argument>
+		    </resource>
+		</step>
+		
+		
+		
+        <step id="CONVERT" description="Run the python script on the four input NIFTI files">
+            <resource name="run_python_pipeline" location="python_pipeline/resources">
+                <argument id="resdir">
+                    <value>^/Pipeline/parameters/parameter[name='outputdir']/values/unique/text()^</value>
+                </argument>
+                <argument id="nifti_3DT1dir">
+                    <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='3DT1']/values/unique/text(),'/3DT1.nii')^</value>
+                </argument>
+                <argument id="nifti_FLAIRdir">
+                    <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_FLAIR']/values/unique/text(),'/T2_FLAIR.nii')^</value>
+                </argument>
+                <argument id="nifti_STARdir">
+                    <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='T2_STAR']/values/unique/text(),'/T2_STAR.nii')^</value>
+                </argument>
+                <argument id="nifti_DTI50dir">
+                    <value>^concat(/Pipeline/parameters/parameter[name='rawdir']/values/unique/text(),'/',/Pipeline/parameters/parameter[name='DTI']/values/unique/text(),'/DTI.nii')^</value>
+                </argument>
+            </resource>
+        </step>
+        
+        
+        <step id="CREATE_RECON" description="Create recontruction">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="method">
+                    <value>PUT</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/archive/projects/',/Pipeline/parameters/parameter[name='project']/values/unique/text(),'/subjects/',/Pipeline/parameters/parameter[name='subject']/values/unique/text(),'/experiments/',/Pipeline/parameters/parameter[name='label']/values/unique/text(),'/reconstructions/RES?xnat:reconstructedImageData/type=T1_RECON','"')^</value>
+                </argument>
+            </resource>
+        </step>
+        
+        <step id="UPLOAD" description="Upload all new files">
+            <resource name="XnatDataClient" location="xnat_tools">
+                <argument id="sessionId">
+                    <value>^fileUtils:getJSESSION('DUMMY')^</value>
+                </argument>
+                <argument id="method">
+                    <value>PUT</value>
+                </argument>
+                <argument id="remote">
+                    <value>^concat('"',/Pipeline/parameters/parameter[name='host']/values/unique/text(),'/data/archive/projects/',/Pipeline/parameters/parameter[name='project']/values/unique/text(),'/subjects/',/Pipeline/parameters/parameter[name='subject']/values/unique/text(),'/experiments/',/Pipeline/parameters/parameter[name='label']/values/unique/text(),'/reconstructions/RES/files?reference=',/Pipeline/parameters/parameter[name='outputdir']/values/unique/text(),'"')^</value>
+                </argument>
+            </resource>
+        </step>
+        
+	</steps>
+</Pipeline>

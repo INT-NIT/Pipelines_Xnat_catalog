@@ -1,0 +1,53 @@
+--warpres=20,16,14,12,10,6,4,4,4 --fwhm=8,6,4,3,3,2,1,0,0 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1 --splineorder=3 --numprec=double --interp=spline --scale=1
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --fwhm=8,6,4,3,3,2,1,0,0 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1 --splineorder=3 --numprec=double --interp=spline
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --fwhm=8,6,4,3,3,2,1,0,0 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1 --splineorder=3 --numprec=double
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --fwhm=8,6,4,3,3,2,1,0,0 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1 --splineorder=3
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --fwhm=8,6,4,3,3,2,1,0,0 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1
+?
+
+--warpres=20,16,14,12,10,6,4,4,4 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy --estmov=1,1,1,1,1,0,0,0,0 --minmet=0,0,0,0,0,1,1,1,1 --splineorder=3 --numprec=double --interp=spline --scale=1
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --miter=5,5,5,5,5,10,10,20,20 --lambda=0.005,0.001,0.0001,0.000015,0.000005,0.0000005,0.00000005,0.0000000005,0.00000000001 --ssqlambda=1 --regmod=bending_energy  --splineorder=3 --numprec=double --interp=spline --scale=1
+Segmentation fault
+
+--warpres=20,16,14,12,10,6,4,4,4 --regmod=bending_energy  --splineorder=3 --numprec=double --interp=spline --scale=1
+Segmentation fault
+
+-regmod=bending_energy  --splineorder=3 --numprec=double --interp=spline --scale=1
+OK
+
+--warpres=20,16,14,12,10,6,4,4,4
+Segmentation fault
+
+--warpres=20,16,14,12,10,10,10,10
+Segmentation fault
+
+--warpres=10
+OK
+
+--warpres=10,10,10,10,10,10,10,10
+(pas laissé jusqu'au bout mais semble OK apres 15min...)
+
+--warpres=20
+OK (rapide)
+
+--warpres=4
+OK
+
+--subsamp=2,2,2,2,2,1,1,1,1
+Segmentation fault
+
+--subsamp=2
+Segmentation fault
+
+--subsamp=1
+OK

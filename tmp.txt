@@ -1,0 +1,226 @@
+93a94
+> parser.add_argument("--normFieldMap", help="Overwrite NIFTI files if they exist")
+109a111,114
+> ### to do in DicomToBIDS
+> normFieldMap = isTrue(args.normFieldMap)
+> print("normFieldMap: ", normFieldMap)
+> 
+168c173,174
+< seriesDescList = [scan['series_description'] for scan in scanRequestResultList]  # { id: sd for (scan['ID'], scan['series_description']) in scanRequestResultList }
+---
+> seriesDescList = [scan['series_description'] for scan in scanRequestResultList]
+>  # { id: sd for (scan['ID'], scan['series_description']) in scanRequestResultList }
+193c199,200
+< r = sess.get(host + "/data/projects/%s/config/bids/bidsmap" % project, params={"contents": True})
+---
+> r = sess.get(host + "/data/projects/%s/config/bids/bidsmap" % project,
+> params={"contents": True})
+210c217,232
+< resolved = [bidsnamemap[x.lower()] for x in seriesDescList if x.lower() in bidsnamemap]
+---
+> 
+> def any_match(target_string, bidsnamemap):
+>     for cur_key,cur_value in bidsnamemap.items():
+>         if cur_key in target_string:
+>             return cur_value
+>     return False
+> 
+> #resolved = [bidsnamemap[x.lower()] for x in seriesDescList if x.lower() in
+> #bidsnamemap]
+> 
+> resolved = []
+> for x in seriesDescList:
+>     val = any_match(x.lower(), bidsnamemap)
+>     if val is not False:
+>         resolved.append(val)
+> 
+216c238,240
+< multiples = {seriesdesc: count for seriesdesc, count in bidscount.viewitems() if count > 1}
+---
+> multiples = {seriesdesc: count for seriesdesc, count in bidscount.viewitems() if (count > 1 and not seriesdesc.startswith("task-"))}
+> 
+> print (multiples)
+229c253,256
+<         
+---
+> 
+>     elif subject.startswith("sub_"):
+>         base = "sub-" + subject.split("_")[1] + "_"
+> 
+232,233d258
+<     
+<     #base = "sub-" + subject + "_"
+234a260
+>     val = any_match(seriesdesc.lower(), bidsnamemap)
+236c262
+<     if seriesdesc.lower() not in bidsnamemap:
+---
+>     if val is False:
+239a266,272
+> 
+>     print "Series " + seriesdesc + " matched " + val
+> 
+>     if seriesdesc.startswith("task-"):
+>         match = seriesdesc
+>         if seriesdesc.split("_")[-1] != "bold":
+>             match = match + "_bold"
+241,242c274,277
+<         print "Series " + seriesdesc + " matched " + bidsnamemap[seriesdesc.lower()]
+<         match = bidsnamemap[seriesdesc.lower()]
+---
+>         if val == "sbref":
+>             continue
+>         else:
+>             match = val
+246a282,292
+>     # special task
+>     # capitalize sSBREF
+>     if splitname[-1] == "SBRef":
+>         splitname[-1] = "sbref"
+> 
+>     if any([atom == "bold" for atom in splitname[:-1]]):
+>         splitname.remove('bold')
+> 
+>     print(splitname)
+>     match = "_".join(splitname)
+> 
+247a294
+>     #if match in multiples and not "epi" in splitname: ### not sure why there is epi here
+257a305,308
+> 
+>         print("****Multiple****" ,bidsname)
+> 
+> 
+259c310,331
+<         bidsname = match
+---
+>         list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
+>             for atom in splitname]
+>         print list_run
+>         if any(list_run):
+> 
+>             print("**** found error with run name: %s"%match)
+> 
+>             index = list_run.index(True)
+>             run_atom = splitname[index]
+>             print("run_atom: ", run_atom)
+> 
+>             run_index = run_atom.strip('run')
+> 
+>             print("run_index: ", run_index)
+>             assert run_index.isdigit(), "Error %s should be digit" %run_index
+> 
+>             splitname[index] = "run-%02d"%int(run_index)
+>             bidsname = "_".join(splitname)
+>             print ("**** final name :%s"%bidsname)
+> 
+>         else:
+>             bidsname = match
+326a399
+> 
+390a464,486
+> 
+>     ############################################## special case of fieldmap
+> 
+>     temp_delete = False
+> 
+>     if "epi" in splitname and usingDicom:
+>         print '****** Checking fieldmap in DICOM headers of file %s.' % name
+>         d = dicomLib.read_file(name)
+>         fieldMadHeader = d.get((0x0008, 0x0008), None)
+>         print(fieldMadHeader)
+> 
+>         if "NORM" in fieldMadHeader and not normFieldMap:
+>             print("***** Norm found but not expected, skipping...")
+>             temp_delete= True
+>         elif not "NORM" in fieldMadHeader and normFieldMap:
+>             print("***** Norm not found but expected, skipping...")
+>             temp_delete=True
+>         else:
+>             print("***** Found corresponding normFieldMap")
+> 
+>     if temp_delete:
+>         continue
+> 
+420a517,521
+> 
+>     if "BOLD_ME" in seriesdesc:
+>         base = base + "echo-%e_"
+>         print (base)
+> 
+430a532,555
+> 
+>         ### Modify json if task-
+>         list_task = [atom.startswith("task") and len(atom.split("-"))== 2 \
+>             for atom in splitname]
+> 
+>         if any(list_task):
+> 
+>             task = splitname[list_task.index(True)].split("-")[1]
+> 
+>             print("**** found task- with run name: %s"%task)
+> 
+>             json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+> 
+> 
+> 
+>             new_json_contents = {'TaskName': task}
+> 
+>             with open(json_bids_file) as f:
+>                 data = json.load(f)
+> 
+>             data.update(new_json_contents)
+> 
+>             with open(json_bids_file, 'w') as f:
+>                 json.dump(data, f)
+505,554d629
+< 
+<     # Check number of files in image directory, if more than one assume multiple echoes
+<     numechoes = len(os.listdir(scanImgDir))  # multiple .nii.gz files will be generated by dcm2niix if there are multiple echoes
+<     if numechoes > 1:
+<         # Loop through set of folders (IMG and BIDS)
+<         for dir in (scanImgDir, scanBidsDir):
+<             # Get sorted list of files
+<             multiple_echoes = sorted(os.listdir(dir))
+< 
+<             # Divide length of file list by number of echoes to find out how many files in each echo
+<             # (Multiband DWI would have BVEC, BVAL, and JSON in BIDS dir for each echo)
+<             filesinecho = len(multiple_echoes) / numechoes
+< 
+<             echonumber = 1
+<             filenumber = 1
+< 
+<             # Rename files
+<             for echo in multiple_echoes:
+<                 splitname = echo.split("_")
+< 
+<                 # Locate run if present in BIDS name
+<                 runstring = [s for s in splitname if "run" in s]
+< 
+<                 if runstring != []:
+<                     runindex = splitname.index(runstring[0])
+<                     splitname.insert(runindex, "echo-" + str(echonumber))  # insert where run is (will displace run to later position)
+<                 else:
+<                     splitname.insert(-1, "echo-" + str(echonumber))  # insert right before the data type
+< 
+<                 # Remove the "a" or other character from before the .nii.gz if not on the first echo
+<                 if (echonumber > 1):
+<                     ending = splitname[-1].split(".")
+<                     cleanedtype = ending[0][:-1]
+<                     ending[0] = cleanedtype
+<                     cleanedname = ".".join(ending)
+<                     splitname[-1] = cleanedname
+< 
+<                 # Rejoin name
+<                 echoname = "_".join(splitname)
+< 
+<                 # Do file rename
+<                 os.rename(os.path.join(dir, echo), os.path.join(dir, echoname))
+< 
+<                 # When file count rolls over increment echo and continue
+<                 if filenumber == filesinecho:
+<                     echonumber += 1
+<                     filenumber = 1  # restart count for new echo
+< 
+<                 # Increment file count each time one is renamed
+<                 filenumber += 1
