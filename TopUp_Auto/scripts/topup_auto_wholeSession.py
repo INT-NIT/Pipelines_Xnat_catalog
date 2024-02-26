@@ -292,24 +292,24 @@ print(cmd)
 
 os.system(cmd)
 
-################### removing one slie if necessary
-assert os.path.exists(fmap_AP_PA_file+".nii.gz"), "Could not find fmap_AP_PA_file = {}.nii.gz".format(fmap_AP_PA_file)
+#################### removing one slie if necessary
+#assert os.path.exists(fmap_AP_PA_file+".nii.gz"), "Could not find fmap_AP_PA_file = {}.nii.gz".format(fmap_AP_PA_file)
 
-dimz = os.popen('fslval {}.nii.gz dim3'.format(fmap_AP_PA_file)).read()
+#dimz = os.popen('fslval {}.nii.gz dim3'.format(fmap_AP_PA_file)).read()
 
-print("dimz = {}".format(dimz))
-if int(dimz)%2 == 1:
+#print("dimz = {}".format(dimz))
+#if int(dimz)%2 == 1:
 
-    print("Remove one slice from data to get even number of slices")
-    tmp_file = os.path.join(topupdir,"up_down_b0")
+    #print("Remove one slice from data to get even number of slices")
+    #tmp_file = os.path.join(topupdir,"up_down_b0")
 
-    os.system("fslroi {}.nii.gz {}.nii.gz  0 -1 0 -1 1 -1".format(fmap_AP_PA_file, tmp_file))
-    fmap_AP_PA_file = tmp_file
-    dimz = os.popen('fslval {}.nii.gz dim3'.format(fmap_AP_PA_file)).read()
+    #os.system("fslroi {}.nii.gz {}.nii.gz  0 -1 0 -1 1 -1".format(fmap_AP_PA_file, tmp_file))
+    #fmap_AP_PA_file = tmp_file
+    #dimz = os.popen('fslval {}.nii.gz dim3'.format(fmap_AP_PA_file)).read()
 
-    print("After modif, dimz = {}".format(dimz))
+    #print("After modif, dimz = {}".format(dimz))
 
-print (fmap_AP_PA_file)
+#print (fmap_AP_PA_file)
 
 #dimz=`fslval $out_dir/topup/Fieldmap_AP_PA.nii.gz dim3`
 #if [ `expr $dimz % 2` -eq 1 ]; then
