@@ -674,21 +674,20 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 extension = ".".join(point_split[1:])
 
-                print "Renaming file {} to {}".format(f, bidsname+"."+extension)
-                os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
+                #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
+                #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
 
-                print(os.listdir(scanBidsDir))
-                print(bidsname+"."+extension)
+                #print(os.listdir(scanBidsDir))
+                #print(bidsname+"."+extension)
 
-                #if "echo" not in file_name:
-                    #if file_name != bidsname:
-                        #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
-                        #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
-                #else:
-                    #print("found echo in {}, skipping rename".format(file_name))
-                    #print(os.listdir(scanBidsDir))
-                    #print(bidsname+"."+extension)
-                    #0/0
+                if "echo" not in file_name:
+                    if file_name != bidsname:
+                        print "Renaming file {} to {}".format(f, bidsname+"."+extension)
+                        os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
+                else:
+                    print("found echo in {}, skipping rename".format(file_name))
+                    print(os.listdir(scanBidsDir))
+                    print(bidsname+"."+extension)
 
             ### Modify json if task-
             json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
