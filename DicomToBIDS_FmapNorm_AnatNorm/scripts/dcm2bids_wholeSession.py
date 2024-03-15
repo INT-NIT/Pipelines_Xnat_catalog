@@ -678,9 +678,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     if file_name != bidsname:
                         print "Renaming file {} to {}".format(f, bidsname+"."+extension)
                         os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
-
                 else:
                     print("found echo in {}, skipping rename".format(file_name))
+                    print(os.listdir(scanBidsDir))
+                    print(bidsname+"."+extension)
+                    0/0
 
             ### Modify json if task-
             json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
