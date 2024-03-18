@@ -696,7 +696,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print("task-ME" in bidsname)
 
             if "task-ME" in bidsname:
-                print("task-ME" found, skipping)
+                print("task-ME found, skipping")
                 continue
 
             list_task = [atom.startswith("task") and len(atom.split("-")) == 2
