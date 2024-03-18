@@ -691,10 +691,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     print(bidsname+"."+extension)
 
             ### Modify json if task-
-            json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-            list_task = [atom.startswith("task") and len(atom.split("-"))== 2 \
-                for atom in splitname]
+            list_task = [atom.startswith("task") and len(atom.split("-")) == 2
+                         and not atom.endswith("ME") for atom in splitname]
+
+            print(list_task)
 
             if any(list_task):
 
@@ -703,8 +704,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 print("**** found task- with run name: %s"%task)
 
                 json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
-
-
 
                 new_json_contents = {'TaskName': task}
 
