@@ -798,7 +798,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 if "nii" in f:
                     print("Renaming {} to {}".format(
                         os.path.join(scanBidsDir, f),
-                        os.path.join(scanImgDir, f))
+                        os.path.join(scanImgDir, f)))
 
                     os.rename(os.path.join(scanBidsDir, f), os.path.join(scanImgDir, f))
 
