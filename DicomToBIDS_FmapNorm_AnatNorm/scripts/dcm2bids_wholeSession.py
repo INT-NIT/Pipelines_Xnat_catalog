@@ -674,6 +674,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 extension = ".".join(point_split[1:])
 
+
                 #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
                 #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
 
