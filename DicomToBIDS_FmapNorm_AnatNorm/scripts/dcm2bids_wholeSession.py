@@ -697,30 +697,30 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             if "task-ME" in bidsname:
                 print("task-ME found, skipping")
-                continue
+            else:
 
-            list_task = [atom.startswith("task") and len(atom.split("-")) == 2
-                and not atom.endswith("ME") for atom in splitname]
+                list_task = [atom.startswith("task") and len(atom.split("-")) == 2
+                    and not atom.endswith("ME") for atom in splitname]
 
-            print(list_task)
+                print(list_task)
 
-            if any(list_task):
+                if any(list_task):
 
-                task = splitname[list_task.index(True)].split("-")[1]
+                    task = splitname[list_task.index(True)].split("-")[1]
 
-                print("**** found task- with run name: %s"%task)
+                    print("**** found task- with run name: %s"%task)
 
-                json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-                new_json_contents = {'TaskName': task}
+                    new_json_contents = {'TaskName': task}
 
-                with open(json_bids_file) as f:
-                    data = json.load(f)
+                    with open(json_bids_file) as f:
+                        data = json.load(f)
 
-                data.update(new_json_contents)
+                    data.update(new_json_contents)
 
-                with open(json_bids_file, 'w') as f:
-                    json.dump(data, f)
+                    with open(json_bids_file, 'w') as f:
+                        json.dump(data, f)
         else:
             # call dcm2nii for converting ima files
             print subprocess.check_output("dcm2nii -b @PIPELINE_DIR_PATH@/catalog/DicomToBIDS/resources/dcm2nii.ini -g y -f Y -e N -p N -d N -o {} {}".format(scanBidsDir, scanDicomDir).split())
@@ -796,6 +796,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             for f in os.listdir(scanBidsDir):
 
                 if "nii" in f:
+                    print("Renaming {} to {}".format(
+                        os.path.join(scanBidsDir, f),
+                        os.path.join(scanImgDir, f))
+
                     os.rename(os.path.join(scanBidsDir, f), os.path.join(scanImgDir, f))
 
     ##########
