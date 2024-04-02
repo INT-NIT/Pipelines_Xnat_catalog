@@ -208,6 +208,8 @@ for scan in scanRequestResultList:
 
 
                 r_files = get(filesURL_json, params={"format": "json"})
+                print(r_files)
+
                 pathDict = [val for val in \
                     r_files.json()["ResultSet"]["Result"]][0]
                 print (pathDict)
@@ -266,8 +268,17 @@ for scan in scanRequestResultList:
             r_files = get(filesURL_json, params={"format": "json"})
             print(r_files.json())
 
-            pathDict = [val for val in \
-                r_files.json()["ResultSet"]["Result"]][0]
+            if "ResultSet" not in r_files.json():
+                continue
+
+            if "Result" not in r_files.json()["ResultSet"]:
+                continue
+
+            if len(r_files.json()["ResultSet"]["Result"]) == 0:
+                continue
+
+            pathDict = [val for val in
+                        r_files.json()["ResultSet"]["Result"]][0]
 
             if 'Name' in pathDict.keys():
                 split_subject = subject.split("_")
