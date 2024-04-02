@@ -329,8 +329,11 @@ for scan in scanRequestResultList:
 
                 print("IntendedFor: {}".format(dict_dico_files[index_run]['IntendedFor']))
 
+print("Finished dict_dico_files")
+^
 print(dict_dico_files)
 
+print("*********************** now running topup part of the script")
 
 for index, dico_files in dict_dico_files.iteritems():
 
