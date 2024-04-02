@@ -254,80 +254,80 @@ for scan in scanRequestResultList:
 
                 dict_dico_files[index_run][key] = loc_file
 
-        ### otherwise, keep the name for "IntendedFor"
-        if splitdesc[-1] != "SBRef" and splitdesc[0].startswith("task-"):
-        #if splitdesc[-1] == "bold" and splitdesc[0].startswith("task-"):
+        #### otherwise, keep the name for "IntendedFor"
+        #if splitdesc[-1] != "SBRef" and splitdesc[0].startswith("task-"):
+        ##if splitdesc[-1] == "bold" and splitdesc[0].startswith("task-"):
 
-            path_res = "/data/experiments/%s/scans/%s/resources/"%(session,scanid)
+            #path_res = "/data/experiments/%s/scans/%s/resources/"%(session,scanid)
 
-            print("Found a fonctional file {} to add to 'intended for' field".format(path_res))
+            #print("Found a fonctional file {} to add to 'intended for' field".format(path_res))
 
-            filesURL_json=host+path_res+"NIFTI/files"
-            print(filesURL_json)
+            #filesURL_json=host+path_res+"NIFTI/files"
+            #print(filesURL_json)
 
-            r_files = get(filesURL_json, params={"format": "json"})
-            print(r_files.json())
+            #r_files = get(filesURL_json, params={"format": "json"})
+            #print(r_files.json())
 
-            if "ResultSet" not in r_files.json():
-                continue
+            #if "ResultSet" not in r_files.json():
+                #continue
 
-            if "Result" not in r_files.json()["ResultSet"]:
-                continue
+            #if "Result" not in r_files.json()["ResultSet"]:
+                #continue
 
-            if len(r_files.json()["ResultSet"]["Result"]) == 0:
-                continue
+            #if len(r_files.json()["ResultSet"]["Result"]) == 0:
+                #continue
 
-            pathDict = [val for val in
-                        r_files.json()["ResultSet"]["Result"]][0]
+            #pathDict = [val for val in
+                        #r_files.json()["ResultSet"]["Result"]][0]
 
-            if 'Name' in pathDict.keys():
-                split_subject = subject.split("_")
-                print("*** {}".format(split_subject))
+            #if 'Name' in pathDict.keys():
+                #split_subject = subject.split("_")
+                #print("*** {}".format(split_subject))
 
-                print(splitdesc)
+                #print(splitdesc)
 
-                done = False
-                for desc in splitdesc:
-                    # special localizer
-                    if done:
-                        continue
+                #done = False
+                #for desc in splitdesc:
+                    ## special localizer
+                    #if done:
+                        #continue
 
-                    elif desc == "task-Localizer":
-                        print("Found task-Localizer, forcing run = 1 for IntendedFor")
+                    #elif desc == "task-Localizer":
+                        #print("Found task-Localizer, forcing run = 1 for IntendedFor")
 
-                        index_run = '1'
-                        done = True
+                        #index_run = '1'
+                        #done = True
 
-                    elif desc.startswith("run") and desc[-1].isdigit():
-                        index_run = desc[-1]
-                        done = True
+                    #elif desc.startswith("run") and desc[-1].isdigit():
+                        #index_run = desc[-1]
+                        #done = True
 
-                print(index_run)
+                #print(index_run)
 
-                if len(split_subject) > 1:
-                    if split_subject[1].startswith("ses"):
-                        print("**** Adding {} for IntendedFor".format(split_subject))
-                        task_bold_file = os.path.join(split_subject[1],"func",pathDict['Name'])
-                    else:
-                        print("Not starting with ses {} for IntendedFor".format(split_subject))
-                        task_bold_file = os.path.join("func",pathDict['Name'])
-                else:
+                #if len(split_subject) > 1:
+                    #if split_subject[1].startswith("ses"):
+                        #print("**** Adding {} for IntendedFor".format(split_subject))
+                        #task_bold_file = os.path.join(split_subject[1],"func",pathDict['Name'])
+                    #else:
+                        #print("Not starting with ses {} for IntendedFor".format(split_subject))
+                        #task_bold_file = os.path.join("func",pathDict['Name'])
+                #else:
 
-                    print("Not starting with ses {} for IntendedFor".format(split_subject))
-                    task_bold_file = os.path.join("func",pathDict['Name'])
+                    #print("Not starting with ses {} for IntendedFor".format(split_subject))
+                    #task_bold_file = os.path.join("func",pathDict['Name'])
 
-                if not index_run in dict_dico_files.keys():
+                #if not index_run in dict_dico_files.keys():
 
-                    print("Creating {} ".format(index_run))
+                    #print("Creating {} ".format(index_run))
 
-                    dict_dico_files[index_run] = {}
+                    #dict_dico_files[index_run] = {}
 
-                if 'IntendedFor' in dict_dico_files[index_run].keys():
-                    dict_dico_files[index_run]['IntendedFor'].append(task_bold_file)
-                else:
-                    dict_dico_files[index_run]['IntendedFor'] = [task_bold_file]
+                #if 'IntendedFor' in dict_dico_files[index_run].keys():
+                    #dict_dico_files[index_run]['IntendedFor'].append(task_bold_file)
+                #else:
+                    #dict_dico_files[index_run]['IntendedFor'] = [task_bold_file]
 
-                print("IntendedFor: {}".format(dict_dico_files[index_run]['IntendedFor']))
+                #print("IntendedFor: {}".format(dict_dico_files[index_run]['IntendedFor']))
 
 print("Finished dict_dico_files")
 ^
