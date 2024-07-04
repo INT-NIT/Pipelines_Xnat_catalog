@@ -707,13 +707,16 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                     task = splitname[list_task.index(True)].split("-")[1]
 
-                    print("**** found task- with run name: %s"%task)
+                    print("**** found task- with run name: {}".format(task))
 
-                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
-                    nii_bids_file = os.path.join(scanBidsDir, bidsname)+".nii.gz"
+                    json_bids_file = os.path.join(scanBidsDir,
+                                                  bidsname)+".json"
+                    nii_bids_file = os.path.join(scanBidsDir,
+                                                 bidsname)+".nii.gz"
 
-                    new_json_contents = {'TaskName': task,
-                                         'B0FieldSource': "B0map" + str(index_bmap)}
+                    new_json_contents = {
+                        'TaskName': task,
+                        'B0FieldSource': "B0map" + str(index_bmap)}
 
                     with open(json_bids_file) as f:
                         data = json.load(f)
@@ -727,20 +730,23 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             # Modify json if epi
             if "epi" in bidsname:
+                prin("Modifying json for epi")
 
                 json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-
-                if 'PA' in splitdesc:
+                if 'dir-PA' in bidsname:
+                    print("fmap PA found")
                     fmap_PA = True
-                elif 'AP' in splitdesc:
+                elif 'dir-AP' in bidsname:
+                    print("fmap AP found")
                     fmap_AP = True
 
                 dico_files["B0FieldIdentifier"] = "B0map" + index_bmap
 
                 json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-                new_json_contents = {'B0FieldIdentifier': "B0map" + index_bmap, "IntendedFor": store_previous_task_files}
+                new_json_contents = {'B0FieldIdentifier': "B0map" + index_bmap,
+                                     "IntendedFor": store_previous_task_files}
 
                 with open(json_bids_file) as f:
                     data = json.load(f)
