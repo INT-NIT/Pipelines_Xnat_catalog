@@ -298,6 +298,12 @@ scanResources = r.json()["ResultSet"]["Result"]
 print 'Found resources %s.' % ', '.join(res["label"] for res in scanResources)
 print scanResources
 
+# for task files and fieldmap files:
+index_bmap = 0
+store_previous_task_files = []
+
+fmap_PA = False
+fmap_AP = False
 
 # Cheat and reverse scanid and seriesdesc lists so numbering is in the right order
 for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
@@ -674,13 +680,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 extension = ".".join(point_split[1:])
 
-
-                #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
-                #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
-
-                #print(os.listdir(scanBidsDir))
-                #print(bidsname+"."+extension)
-
                 if "echo" not in file_name:
                     if file_name != bidsname:
                         print "Renaming file {} to {}".format(f, bidsname+"."+extension)
@@ -690,7 +689,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     print(os.listdir(scanBidsDir))
                     print(bidsname+"."+extension)
 
-            ### Modify json if task-
+            # Modify json if task-
 
             print(bidsname)
             print("task-ME" in bidsname)
@@ -711,8 +710,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     print("**** found task- with run name: %s"%task)
 
                     json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+                    nii_bids_file = os.path.join(scanBidsDir, bidsname)+".nii.gz"
 
-                    new_json_contents = {'TaskName': task}
+                    new_json_contents = {'TaskName': task,
+                                         'B0FieldSource': "B0map" + index_bmap}
 
                     with open(json_bids_file) as f:
                         data = json.load(f)
@@ -721,6 +722,51 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                     with open(json_bids_file, 'w') as f:
                         json.dump(data, f)
+
+                    store_previous_task_files.append(nii_bids_file)
+
+            # Modify json if epi
+            if "epi" in bidsname:
+
+                json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+
+
+                if 'PA' in splitdesc:
+                    fmap_PA = True
+                elif 'AP' in splitdesc:
+                    fmap_AP = True
+
+                dico_files["B0FieldIdentifier"] = "B0map" + index_bmap
+
+                json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+
+                new_json_contents = {'B0FieldIdentifier': "B0map" + index_bmap, "IntendedFor": store_previous_task_files}
+
+                with open(json_bids_file) as f:
+                    data = json.load(f)
+
+                data.update(new_json_contents)
+
+                with open(json_bids_file, 'w') as f:
+                    json.dump(data, f)
+
+
+                new_json_contents = {'TaskName': task}
+
+                with open(json_bids_file) as f:
+                    data = json.load(f)
+
+                data.update(new_json_contents)
+
+                with open(json_bids_file, 'w') as f:
+                    json.dump(data, f)
+
+                if fmap_PA and fmap_AP:
+                    fmap_PA = False
+                    fmap_AP = False
+                    index_bmap = index_bmap+1
+                    store_previous_task_files = []
+
         else:
             # call dcm2nii for converting ima files
             print subprocess.check_output("dcm2nii -b @PIPELINE_DIR_PATH@/catalog/DicomToBIDS/resources/dcm2nii.ini -g y -f Y -e N -p N -d N -o {} {}".format(scanBidsDir, scanDicomDir).split())
