@@ -713,7 +713,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     nii_bids_file = os.path.join(scanBidsDir, bidsname)+".nii.gz"
 
                     new_json_contents = {'TaskName': task,
-                                         'B0FieldSource': "B0map" + index_bmap}
+                                         'B0FieldSource': "B0map" + str(index_bmap)}
 
                     with open(json_bids_file) as f:
                         data = json.load(f)
