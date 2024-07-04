@@ -730,7 +730,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             # Modify json if epi
             if "epi" in bidsname:
-                prin("Modifying json for epi")
+                print("Modifying json for epi")
 
                 json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
