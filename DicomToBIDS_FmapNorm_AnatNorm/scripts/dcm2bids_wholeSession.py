@@ -741,23 +741,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     print("fmap AP found")
                     fmap_AP = True
 
-                dico_files["B0FieldIdentifier"] = "B0map" + index_bmap
-
                 json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-                new_json_contents = {'B0FieldIdentifier': "B0map" + index_bmap,
-                                     "IntendedFor": store_previous_task_files}
-
-                with open(json_bids_file) as f:
-                    data = json.load(f)
-
-                data.update(new_json_contents)
-
-                with open(json_bids_file, 'w') as f:
-                    json.dump(data, f)
-
-
-                new_json_contents = {'TaskName': task}
+                new_json_contents = {
+                    'B0FieldIdentifier': "B0map" + str(index_bmap),
+                    "IntendedFor": store_previous_task_files}
 
                 with open(json_bids_file) as f:
                     data = json.load(f)
