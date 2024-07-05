@@ -733,7 +733,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                         print("Found bold, preparing IntendedFor with subject " + subject)
                         split_ses = subject.split("_")
                         print(split_ses)
-                        if len(split_ses) > 2:
+                        if len(split_ses) >= 2:
                             print(split_ses[1])
                             if split_ses[1].startswith("ses-"):
                                 session_id = split_ses[1]
