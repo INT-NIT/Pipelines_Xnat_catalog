@@ -711,12 +711,14 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                     json_bids_file = os.path.join(scanBidsDir,
                                                   bidsname)+".json"
-                    nii_bids_file = os.path.join(scanBidsDir,
-                                                 bidsname)+".nii.gz"
 
-                    new_json_contents = {
-                        'TaskName': task,
-                        'B0FieldSource': "B0map" + str(index_bmap)}
+                    if "bold" in splitname:
+                        new_json_contents = {
+                            'TaskName': task,
+                            'B0FieldSource': "B0map" + str(index_bmap)}
+                    else:
+                        new_json_contents = {
+                            'TaskName': task}
 
                     with open(json_bids_file) as f:
                         data = json.load(f)
@@ -726,7 +728,15 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     with open(json_bids_file, 'w') as f:
                         json.dump(data, f)
 
-                    store_previous_task_files.append(nii_bids_file)
+                    if "bold" in splitname:
+                        split_ses = session.split["_"]
+                        if len(split_ses) == 2:
+                            session_id = split_ses[1]
+
+                        nii_bids_file = os.path.join(session_id, "func",
+                                                     bidsname+".nii.gz")
+
+                        store_previous_task_files.append(nii_bids_file)
 
             # Modify json if epi
             if "epi" in bidsname:
