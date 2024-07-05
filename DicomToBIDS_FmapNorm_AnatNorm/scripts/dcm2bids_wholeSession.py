@@ -731,14 +731,20 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     if "bold" in splitname:
 
                         print("Found bold, preparing IntendedFor with session " + session)
-
                         split_ses = session.split("_")
-                        if len(split_ses) == 2:
-                            session_id = split_ses[1]
+                        if len(split_ses) > 2:
+                            if split_ses[1].startswith("ses-"):
+                                session_id = split_ses[1]
 
-                            nii_bids_file = os.path.join(
-                                session_id, "func",
-                                bidsname+".nii.gz")
+                                nii_bids_file = os.path.join(
+                                    session_id, "func",
+                                    bidsname+".nii.gz")
+                            else:
+
+                                nii_bids_file = os.path.join(
+                                    "func",
+                                    bidsname+".nii.gz")
+
                         else:
 
                             nii_bids_file = os.path.join(
