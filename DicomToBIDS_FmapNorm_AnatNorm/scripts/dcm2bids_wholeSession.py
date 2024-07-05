@@ -730,8 +730,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                     if "bold" in splitname:
 
-                        print("Found bold, preparing IntendedFor with session " + session)
-                        split_ses = session.split("_")
+                        print("Found bold, preparing IntendedFor with subject " + subject)
+                        split_ses = subject.split("_")
                         print(split_ses)
                         if len(split_ses) > 2:
                             print(split_ses[1])
