@@ -204,31 +204,31 @@ def bidsifySession(sessionDir):
             bidsScans.append(bidsScan)
 
 
-        print("checking dcm BIDS")
-        scanBidsDcmGlobList = glob(scanBidsDir + '/*.dcm')
+        #print("checking dcm BIDS")
+        #scanBidsDcmGlobList = glob(scanBidsDir + '/*.dcm')
 
-        if len(scanBidsDcmGlobList):
+        #if len(scanBidsDcmGlobList):
 
-            #### checking only dcm file
-            assert len(scanBidsDcmGlobList) == 1, "PhysioLog dir should have only one dcm file, {}".format(scanBidsDcmGlobList)
+            ##### checking only dcm file
+            #assert len(scanBidsDcmGlobList) == 1, "PhysioLog dir should have only one dcm file, {}".format(scanBidsDcmGlobList)
 
-            scanBidsDcmFilePath = scanBidsDcmGlobList[0]
+            #scanBidsDcmFilePath = scanBidsDcmGlobList[0]
 
-            print(scanBidsDcmFilePath )
-            scanBidsDcmFileName = os.path.basename(scanBidsDcmFilePath)
-            scanBidsFileName = scanBidsDcmFileName.rstrip('.dcm')
+            #print(scanBidsDcmFilePath )
+            #scanBidsDcmFileName = os.path.basename(scanBidsDcmFilePath)
+            #scanBidsFileName = scanBidsDcmFileName.rstrip('.dcm')
 
-            scanBidsNameMap = generateBidsNameMap(scanBidsFileName)
+            #scanBidsNameMap = generateBidsNameMap(scanBidsFileName)
 
-            print(scanBidsNameMap)
+            #print(scanBidsNameMap)
 
-            bidsScan = BidsScan(scanId, scanBidsNameMap,scanBidsDcmFilePath )
+            #bidsScan = BidsScan(scanId, scanBidsNameMap,scanBidsDcmFilePath )
 
-            if not bidsScan.subDir:
-                print("SKIPPING. Could not determine subdirectory for modality {}.".format(bidsScan.modality))
-                continue
+            #if not bidsScan.subDir:
+                #print("SKIPPING. Could not determine subdirectory for modality {}.".format(bidsScan.modality))
+                #continue
 
-            bidsScans.append(bidsScan)
+            #bidsScans.append(bidsScan)
 
 
 
@@ -555,7 +555,7 @@ for subSessionDir in os.listdir(arc_dir):
 
         subject_session = subject + "_" + bidsSession.sessionLabel
 
-        print subject_session
+        print(subject_session)
         print("Adding source data session{} to list for subject \
             {}.".format(subSessionDir, subject_session))
 
