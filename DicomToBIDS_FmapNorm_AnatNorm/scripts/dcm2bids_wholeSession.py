@@ -264,30 +264,30 @@ bidscount = collections.Counter(resolved)
 # Remove multiples
 
 #multiples = {seriesdesc: count for seriesdesc, count in bidscount.viewitems() if (count > 1 and not seriesdesc.startswith("task-"))} #previous version
-multiples = {}
+#multiples = {}
 
-for seriesdesc, count in bidscount.viewitems():
-    if count > 1:
-        if seriesdesc.startswith("task-"):
-            continue
-
-        ### NormFieldMap means only one will be kept
-        if seriesdesc.endswith("epi"):
-            continue
-
-        #if seriesdesc.endswith("dwi"):
+#for seriesdesc, count in bidscount.viewitems():
+    #if count > 1:
+        #if seriesdesc.startswith("task-"):
             #continue
 
-        #### NormAnat means only one will be kept
-        if seriesdesc.endswith("T1w"):
-            continue
+        #### NormFieldMap means only one will be kept
+        #if seriesdesc.endswith("epi"):
+            #continue
 
-        if seriesdesc.endswith("T2w"):
-            continue
+        ##if seriesdesc.endswith("dwi"):
+            ##continue
 
-        multiples[seriesdesc] = count
+        ##### NormAnat means only one will be kept
+        #if seriesdesc.endswith("T1w"):
+            #continue
 
-print (multiples)
+        #if seriesdesc.endswith("T2w"):
+            #continue
+
+        #multiples[seriesdesc] = count
+
+#print (multiples)
 
 ############### Checking is experiments has resources:
 
@@ -374,43 +374,67 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     print(splitname)
     match = "_".join(splitname)
 
-    # Check for multiples
-    if match in multiples:
-        # insert run-0x
-        run = 'run-%02d' % multiples[match]
-        splitname.insert(len(splitname) - 1, run)
+    ## Check for multiples
+    #if match in multiples:
+        ## insert run-0x
+        #run = 'run-%02d' % multiples[match]
+        #splitname.insert(len(splitname) - 1, run)
 
-        # decrement count
-        multiples[match] -= 1
+        ## decrement count
+        #multiples[match] -= 1
 
-        # rejoin as string
+        ## rejoin as string
+        #bidsname = "_".join(splitname)
+
+        #print("****Multiple****" ,bidsname)
+
+    #else:
+        #list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
+            #for atom in splitname]
+        #print list_run
+        #if any(list_run):
+
+            #print("**** found error with run name: %s"%match)
+
+            #index = list_run.index(True)
+            #run_atom = splitname[index]
+            #print("run_atom: ", run_atom)
+
+            #run_index = run_atom.strip('run')
+
+            #print("run_index: ", run_index)
+            #assert run_index.isdigit(), "Error %s should be digit" %run_index
+
+            #splitname[index] = "run-%02d"%int(run_index)
+            #bidsname = "_".join(splitname)
+            #print ("**** final name :%s"%bidsname)
+
+        #else:
+            #bidsname = match
+
+    list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
+        for atom in splitname]
+
+    print list_run
+    if any(list_run):
+
+        print("**** found error with run name: %s"%match)
+
+        index = list_run.index(True)
+        run_atom = splitname[index]
+        print("run_atom: ", run_atom)
+
+        run_index = run_atom.strip('run')
+
+        print("run_index: ", run_index)
+        assert run_index.isdigit(), "Error %s should be digit" %run_index
+
+        splitname[index] = "run-%02d"%int(run_index)
         bidsname = "_".join(splitname)
-
-        print("****Multiple****" ,bidsname)
+        print ("**** final name :%s"%bidsname)
 
     else:
-        list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
-            for atom in splitname]
-        print list_run
-        if any(list_run):
-
-            print("**** found error with run name: %s"%match)
-
-            index = list_run.index(True)
-            run_atom = splitname[index]
-            print("run_atom: ", run_atom)
-
-            run_index = run_atom.strip('run')
-
-            print("run_index: ", run_index)
-            assert run_index.isdigit(), "Error %s should be digit" %run_index
-
-            splitname[index] = "run-%02d"%int(run_index)
-            bidsname = "_".join(splitname)
-            print ("**** final name :%s"%bidsname)
-
-        else:
-            bidsname = match
+        bidsname = match
 
     # Get scan resources
     print "Get scan resources for scan %s." % scanid
