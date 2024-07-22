@@ -344,7 +344,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         elif split_series[-1] != "bold":
 
             # remove if full
-            if split_series[-1] == "BOLD"
+            if split_series[-1] == "BOLD":
                 split_series.pop()
 
             split_series.append("bold")
