@@ -335,14 +335,21 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     physio = False
 
     if seriesdesc.startswith("task-"):
-        match = seriesdesc
-        if "PhysioLog" in seriesdesc.split('_'):
+        split_series = seriesdesc.split('_')
+        if "PhysioLog" in split_series:
             print ("Found Physio")
             physio = True
 
         ### task should always end with bold if not PhysioLog
-        elif seriesdesc.split("_")[-1] != "bold":
-            match = match + "_bold"
+        elif split_series[-1] != "bold":
+
+            # remove if full
+            if split_series[-1] == "BOLD"
+                split_series.pop()
+
+            split_series.append("bold")
+
+        match = "_".join(split_series)
     else:
         if val == "sbref":
             ### should not have sbref without task
