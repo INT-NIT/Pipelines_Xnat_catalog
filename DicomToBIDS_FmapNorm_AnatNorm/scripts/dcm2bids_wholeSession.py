@@ -608,6 +608,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         manufacturer_item = d.get_item((0x0008, 0x0070))
         print "Manufacturer (item): {}" .format(manufacturer_item)
 
+        print(manufacturer_item.keys())
+        print(manufacturer_item["CO"])
+
         print "Siemens Healthineers" in manufacturer_item
         print "Siemens Healthineers" == manufacturer_item
 
