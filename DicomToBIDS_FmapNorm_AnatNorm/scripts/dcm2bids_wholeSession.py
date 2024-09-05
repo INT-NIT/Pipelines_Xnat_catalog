@@ -602,14 +602,16 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         d = dicomLib.read_file(name)
         print(d.keys())
 
-        Manufacturer = d.get((0x0008, 0x0070), None)
-        print("Manufacturer = " + Manufacturer)
-        if Manufacturer == "SIEMENS":
+        manufacturer = d.get((0x0008, 0x0070), None)
+        print "Manufacturer : {}" .format(manufacturer)
+
+        if manufacturer == "SIEMENS":
             fieldMadHeader = d.get((0x0008, 0x0008), None)
-        elif Manufacturer == "Siemens Healthineers":
+        elif manufacturer == "Siemens Healthineers":
             fieldMadHeader = d.get((0x0021, 0x1175), None)
         else:
-            print("Warning, Manufacturer = " + Manufacturer + " is unknown")
+            print("Warning, Manufacturer = " + Manufacturer + " is unknown, no fieldMadHeader")
+            fieldMadHeader = ""
 
         print(fieldMadHeader)
 
