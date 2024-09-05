@@ -609,7 +609,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         print "Manufacturer (item): {}" .format(manufacturer_item)
 
         print(manufacturer_item.keys())
-        print(manufacturer_item["CO"])
+        print(manufacturer_item["LO"])
 
         print "Siemens Healthineers" in manufacturer_item
         print "Siemens Healthineers" == manufacturer_item
