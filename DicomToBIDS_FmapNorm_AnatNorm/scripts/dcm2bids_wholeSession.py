@@ -605,12 +605,12 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         manufacturer = d.get((0x0008, 0x0070), None)
         print "Manufacturer : {}" .format(manufacturer)
 
-        if manufacturer == "SIEMENS":
+        if "SIEMENS" in manufacturer:
             fieldMadHeader = d.get((0x0008, 0x0008), None)
-        elif manufacturer == "Siemens Healthineers":
+        elif "Siemens Healthineers" in manufacturer :
             fieldMadHeader = d.get((0x0021, 0x1175), None)
         else:
-            print("Warning, Manufacturer = " + Manufacturer + " is unknown, no fieldMadHeader")
+            print("Warning, Manufacturer = " + manufacturer + " is unknown, no fieldMadHeader")
             fieldMadHeader = ""
 
         print(fieldMadHeader)
