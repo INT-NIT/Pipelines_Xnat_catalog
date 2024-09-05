@@ -600,7 +600,16 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if "epi" in splitname and usingDicom:
         print '****** Checking NORM (fieldMap) in DICOM headers of file %s.' % name
         d = dicomLib.read_file(name)
-        fieldMadHeader = d.get((0x0008, 0x0008), None)
+        Manufacturer = d.get((0x0008, 0x0070), None)
+        print("Manufacturer = " + Manufacturer)
+
+        if Manufacturer == "SIEMENS":
+            fieldMadHeader = d.get((0x0008, 0x0008), None)
+        elif Manufacturer == "Siemens Healthineers":
+            fieldMadHeader = d.get((0x0021, 0x1175), None)
+        else:
+            print("Warning, Manufacturer = " + Manufacturer + " is unknown")
+
         print(fieldMadHeader)
 
         if "NORM" in fieldMadHeader and not normFieldMap:
