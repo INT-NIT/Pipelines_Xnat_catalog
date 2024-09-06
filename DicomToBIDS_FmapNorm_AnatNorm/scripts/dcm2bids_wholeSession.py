@@ -611,15 +611,15 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         print(manufacturer_item.tag)
         print(manufacturer_item.value)
 
-        print "Siemens Healthineers" in manufacturer_item
-        print "Siemens Healthineers" == manufacturer_item
+        print "Siemens Healthineers" in manufacturer_item.value
+        print "Siemens Healthineers" == manufacturer_item.value
 
-        if "SIEMENS" in manufacturer_item:
+        if "SIEMENS" in manufacturer_item.value:
             fieldMadHeader = d.get((0x0008, 0x0008), None)
-        elif "Siemens Healthineers" in manufacturer_item:
+        elif "Siemens Healthineers" in manufacturer_item.value:
             fieldMadHeader = d.get((0x0021, 0x1175), None)
         else:
-            print("Warning, Manufacturer = " + manufacturer_item + " is unknown, no fieldMadHeader")
+            print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMadHeader")
             fieldMadHeader = ""
 
         print(fieldMadHeader)
