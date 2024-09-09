@@ -620,7 +620,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             #fieldMadHeader = d.get((0x0021, 0x1175), None)
 
 
-            fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
+            #fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
             print(name)
 
             cmd = 'dcmdump {} | grep "(0021, 0x1175)"'.format(name)
