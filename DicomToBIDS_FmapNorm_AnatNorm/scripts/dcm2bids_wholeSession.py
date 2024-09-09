@@ -641,7 +641,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 if "(0021,1175)" in line:
                     print("*** {}".format(line))
-                else
+                else:
                     print(line)
 
 
