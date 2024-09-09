@@ -628,6 +628,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             fieldMadHeader = os.system(cmd)
             print(fieldMadHeader)
+            0/0
 
         else:
             print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMadHeader")
