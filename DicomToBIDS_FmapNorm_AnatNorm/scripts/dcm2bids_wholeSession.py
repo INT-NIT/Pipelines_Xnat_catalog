@@ -627,7 +627,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print(cur_path)
             abs_name = os.path.join(cur_path, name)
 
-            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True)
+            proc = subprocess.Popen("dcmdump {}".format(abs_name), stdout=subprocess.PIPE, shell=True)
             print(proc)
 
             print(proc.stdout)
@@ -636,7 +636,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print("program error:", err)
 
 
-            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True, capture_output=True)
+            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True)
             print(proc)
 
             print(proc.stdout)
