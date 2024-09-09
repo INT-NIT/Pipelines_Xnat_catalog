@@ -626,7 +626,16 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             cmd = 'dcmdump {} | grep "(0021, 0x1175)"'.format(name)
             print cmd
 
-            fieldMadHeader = os.popen(cmd).read()
+            proc = subprocess.Popen(cmd.split(" ") , stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+            print("program output:", out)
+
+            proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+            print("program output:", out)
+            fieldMadHeader = out
+
+            #fieldMadHeader = os.popen(cmd).read()
             #os.system(cmd)
             print(fieldMadHeader)
             0/0
