@@ -628,13 +628,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             cmd = 'dcmdump {}"'.format(name)
             print cmd
 
-            proc = subprocess.Popen(cmd.split(" ")).run(stdout=subprocess.PIPE, shell=True)
-            print(proc)
-            (out, err) = proc.communicate()
-            print("program output:", out)
-            print("program error:", err)
-
-
             proc = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, shell=True)
             print(proc)
 
