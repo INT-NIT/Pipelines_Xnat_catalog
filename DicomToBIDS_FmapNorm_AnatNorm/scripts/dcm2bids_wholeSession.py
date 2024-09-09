@@ -623,12 +623,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             #fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
             print(name)
             print(pathDict)
-            print(os.getcwd())
+            cur_path = os.getcwd()
+            print(cur_path)
+            abs_name = os.path.join(cur_path, name)
 
-            cmd = 'dcmdump {}'.format(name)
-            print cmd
-
-            proc = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, shell=True)
+            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True)
             print(proc)
 
             print(proc.stdout)
@@ -636,6 +635,17 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print("program output:", out)
             print("program error:", err)
 
+
+            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True, capture_output=True)
+            print(proc)
+
+            print(proc.stdout)
+            (out, err) = proc.communicate()
+            print("program output:", out)
+            print("program error:", err)
+
+            val = subprocess.check_output(["dcmdump", abs_name])
+            print(val)
             #proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
             #(out, err) = proc.communicate()
             #print("program output:", out)
