@@ -635,7 +635,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             #print("program output:", out)
             #print("program error:", err)
 
-            for line in subprocess.check_output(["dcmdump", abs_name], universal_newlines=True):
+            val =  subprocess.check_output(["dcmdump", abs_name], universal_newlines=True)
+            for line in val.splitlines():
                 print(line)
 
                 #if "(0021,1175)" in line:
