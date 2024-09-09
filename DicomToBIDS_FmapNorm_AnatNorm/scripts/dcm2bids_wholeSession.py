@@ -637,10 +637,12 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             val =  subprocess.check_output(["dcmdump", abs_name], universal_newlines=True)
             for line in val.splitlines():
-                print(line)
+                #print(line)
 
-                #if "(0021,1175)" in line:
-                #    print("*** {}".format(line))
+                if "(0021,1175)" in line:
+                    print("*** {}".format(line))
+                else
+                    print(line)
 
 
             #print(fieldMadHeader)
