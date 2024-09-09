@@ -618,9 +618,16 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             fieldMadHeader = d.get((0x0008, 0x0008), None)
         elif "Siemens Healthineers" in manufacturer_item.value:
             #fieldMadHeader = d.get((0x0021, 0x1175), None)
-            fieldMadHeader = d.get_item((0x0021, 0x1175))
-            print(fieldMadHeader.tag)
-            print(fieldMadHeader.value)
+
+
+            fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
+            print(name)
+
+            cmd = 'dcmdump {} | grep "(0021, 0x1175)"'.format(name)
+            print cmd
+
+            fieldMadHeader = os.system(cmd)
+            print(fieldMadHeader)
 
         else:
             print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMadHeader")
