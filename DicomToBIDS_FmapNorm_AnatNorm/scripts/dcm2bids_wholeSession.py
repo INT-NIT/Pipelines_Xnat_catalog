@@ -655,14 +655,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 else:
                     print line
 
-            print(val.output)
-            for line in val.output:
-                print(line)
-                if "(0021,1175)" in line:
-                    print("*** {}".format(line))
-                else:
-                    print line
-
             #proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
             #(out, err) = proc.communicate()
             #print("program output:", out)
