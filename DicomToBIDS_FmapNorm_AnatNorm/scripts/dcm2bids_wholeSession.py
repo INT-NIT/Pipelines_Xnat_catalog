@@ -641,10 +641,14 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 if "(0021,1175)" in line:
                     print("*** {}".format(line))
-                else:
-                    print(line)
-
-
+                    if len(line.split("["))== 2:
+                        line_left = line.split("[")[1]
+                        print(line_left)
+                        if len(line_left.split("]")) == 2:
+                            line_right = line_left.split("]")[0]
+                            print(line_right)
+                            fieldMadHeader = line_right.split("\\")
+                            print(fieldMadHeader)
             #print(fieldMadHeader)
             0/0
 
