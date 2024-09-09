@@ -628,7 +628,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             cmd = 'dcmdump {}"'.format(name)
             print cmd
 
-            proc = subprocess.Popen(cmd.split(" "))
+            proc = subprocess.run(cmd.split(" "), stdout=subprocess.PIPE, shell=True)
             print(proc)
 
             (out, err) = proc.communicate()
