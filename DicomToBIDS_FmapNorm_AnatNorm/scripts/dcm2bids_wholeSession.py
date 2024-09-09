@@ -623,21 +623,22 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             #fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
             print(name)
 
-            cmd = 'dcmdump {} | grep "(0021, 0x1175)"'.format(name)
+            cmd = 'dcmdump {}"'.format(name)
             print cmd
 
             proc = subprocess.Popen(cmd.split(" ") , stdout=subprocess.PIPE, shell=True)
             (out, err) = proc.communicate()
             print("program output:", out)
+            print("program error:", err)
 
-            proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
-            (out, err) = proc.communicate()
-            print("program output:", out)
-            fieldMadHeader = out
+            #proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
+            #(out, err) = proc.communicate()
+            #print("program output:", out)
+            #fieldMadHeader = out
 
             #fieldMadHeader = os.popen(cmd).read()
             #os.system(cmd)
-            print(fieldMadHeader)
+            #print(fieldMadHeader)
             0/0
 
         else:
