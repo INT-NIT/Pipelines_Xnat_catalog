@@ -631,6 +631,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             proc = subprocess.run(cmd.split(" "), stdout=subprocess.PIPE, shell=True)
             print(proc)
 
+            print(proc.stdout)
             (out, err) = proc.communicate()
             print("program output:", out)
             print("program error:", err)
