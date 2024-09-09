@@ -579,32 +579,23 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     download(name, pathDict)
 
     def check_dicom_header(name):
+        fieldMapHeader = ""
 
         d = dicomLib.read_file(name)
         print(d.keys())
 
-        manufacturer = d.get((0x0008, 0x0070), None)
-        print "Manufacturer : {}" .format(manufacturer)
-
         manufacturer_item = d.get_item((0x0008, 0x0070))
-        print "Manufacturer (item): {}" .format(manufacturer_item)
-
-        print(manufacturer_item.tag)
-        print(manufacturer_item.value)
-
-        print "Siemens Healthineers" in manufacturer_item.value
-        print "Siemens Healthineers" == manufacturer_item.value
 
         if "SIEMENS" in manufacturer_item.value:
-            fieldMadHeader = d.get((0x0008, 0x0008), None)
-        elif "Siemens Healthineers" in manufacturer_item.value:
-            print(name)
+            fieldMapHeader = d.get((0x0008, 0x0008), None)
 
+        elif "Siemens Healthineers" in manufacturer_item.value:
+
+            print(name)
             val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
             for line in val.splitlines():
                 #print(line)
                 if "(0021,1175)" in line:
-                    fieldMadHeader = ""
                     print("*** {}".format(line))
                     if len(line.split("["))== 2:
                         line_left = line.split("[")[1]
@@ -612,15 +603,15 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                         if len(line_left.split("]")) == 2:
                             line_right = line_left.split("]")[0]
                             print(line_right)
-                            fieldMadHeader = line_right.split("\\")
-                            print(fieldMadHeader)
-            #print(fieldMadHeader)
+                            fieldMapHeader = line_right.split("\\")
+                            print(fieldMapHeader)
+            #print(fieldMapHeader)
 
         else:
-            print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMadHeader")
-            fieldMadHeader = ""
+            print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMapHeader")
 
-        return fieldMadHeader
+
+        return fieldMapHeader
 
 
 
@@ -646,15 +637,15 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if "epi" in splitname and usingDicom:
         print '****** Checking NORM (fieldMap) in DICOM headers of file %s.' % name
 
-        fieldMadHeader = check_dicom_header(name)
+        fieldMapHeader = check_dicom_header(name)
 
 
-        print(fieldMadHeader)
+        print(fieldMapHeader)
 
-        if "NORM" in fieldMadHeader and not normFieldMap:
+        if "NORM" in fieldMapHeader and not normFieldMap:
             print("***** Norm found but not expected, skipping...")
             temp_delete= True
-        elif not "NORM" in fieldMadHeader and normFieldMap:
+        elif not "NORM" in fieldMapHeader and normFieldMap:
             print("***** Norm not found but expected, skipping...")
             temp_delete=True
         else:
