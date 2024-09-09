@@ -625,7 +625,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print(pathDict)
             print(os.getcwd())
 
-            cmd = 'dcmdump {}"'.format(name)
+            cmd = 'dcmdump {}'.format(name)
             print cmd
 
             proc = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, shell=True)
