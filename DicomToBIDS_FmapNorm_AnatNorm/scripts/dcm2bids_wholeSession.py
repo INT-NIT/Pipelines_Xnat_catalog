@@ -622,7 +622,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             #fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
             print(name)
-
+            print(pathDict)
+            print(os.getcwd())
+            0/0
             cmd = 'dcmdump {}"'.format(name)
             print cmd
 
