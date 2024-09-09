@@ -622,24 +622,17 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             #fieldMadHeader = d.get_item((0x0021, 0x1175)) # inaccessible directement
             print(name)
-            print(pathDict)
-            cur_path = os.getcwd()
-            print(cur_path)
-            abs_name = os.path.join(cur_path, name)
+            #print(pathDict)
+            #cur_path = os.getcwd()
+            #print(cur_path)
+            #abs_name = os.path.join(cur_path, name)
 
-            #proc = subprocess.Popen("dcmdump {}".format(abs_name), stdout=subprocess.PIPE, shell=True)
-            #print(proc)
-
-            #print(proc.stdout)
-            #(out, err) = proc.communicate()
-            #print("program output:", out)
-            #print("program error:", err)
-
-            val =  subprocess.check_output(["dcmdump", abs_name], universal_newlines=True)
+            val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
             for line in val.splitlines():
                 #print(line)
 
                 if "(0021,1175)" in line:
+                    fieldMadHeader = ""
                     print("*** {}".format(line))
                     if len(line.split("["))== 2:
                         line_left = line.split("[")[1]
