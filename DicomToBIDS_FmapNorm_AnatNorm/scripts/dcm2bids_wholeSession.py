@@ -636,21 +636,21 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             #print("program error:", err)
 
 
-            #proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True)
-            #print(proc)
+            proc = subprocess.Popen(["dcmdump", abs_name], stdout=subprocess.PIPE, shell=True)
+            print(proc)
 
-            #print(proc.output)
-            #print(proc.stdout)
-            #(out, err) = proc.communicate()
-            #print("program output:", out)
-            #print("program error:", err)
+            print(proc.output)
+            print(proc.stdout)
+            (out, err) = proc.communicate()
+            print("program output:", out)
+            print("program error:", err)
 
-            val = subprocess.check_output(["dcmdump", abs_name])
-            print(val)
+            #val = subprocess.check_output(["dcmdump", abs_name])
+            #print(val)
 
-            for line in val:
-                if "(0021,1175)" in line:
-                    print("*** {}".format(line))
+            #for line in val:
+                #if "(0021,1175)" in line:
+                    #print("*** {}".format(line))
 
 
             #proc = subprocess.Popen(cmd , stdout=subprocess.PIPE, shell=True)
