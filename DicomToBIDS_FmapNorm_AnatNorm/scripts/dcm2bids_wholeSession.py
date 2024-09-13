@@ -84,7 +84,7 @@ def check_dicom_header(name):
     fieldMapHeader = ""
 
     d = dicomLib.read_file(name)
-    print(d.keys())
+    #print(d.keys())
 
     manufacturer_item = d.get_item((0x0008, 0x0070))
 
@@ -112,7 +112,7 @@ def check_dicom_header(name):
                         fieldMapHeader = line_right.split("\\")
                         found_line = True
         if not found_line:
-            print("error, could not find (0021,1175) in {}".format(val.splitlines()))
+            print("error, could not find (0021,1175) in val".format())
 
     else:
         print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMapHeader")
@@ -647,7 +647,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
         fieldMapHeader = check_dicom_header(name)
 
-
         print(fieldMapHeader)
 
         if "NORM" in fieldMapHeader and not normFieldMap:
@@ -668,7 +667,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
     if ("T1w" in splitname or "T2w" in splitname) and usingDicom:
         print '****** Checking NORM (Anat) in DICOM headers of file %s.' % name
-
 
         AnatHeader = check_dicom_header(name)
         print(AnatHeader)
