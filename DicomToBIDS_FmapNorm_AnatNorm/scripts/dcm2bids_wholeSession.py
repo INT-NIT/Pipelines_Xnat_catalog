@@ -587,9 +587,12 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         manufacturer_item = d.get_item((0x0008, 0x0070))
 
         if "SIEMENS" in manufacturer_item.value:
+            print("Detected SIEMENS for Manufacturer (old version)")
             fieldMapHeader = d.get((0x0008, 0x0008), None)
 
         elif "Siemens Healthineers" in manufacturer_item.value:
+
+            print("Detected Siemens Healthineers for Manufacturer (new version)")
 
             print(name)
             val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
