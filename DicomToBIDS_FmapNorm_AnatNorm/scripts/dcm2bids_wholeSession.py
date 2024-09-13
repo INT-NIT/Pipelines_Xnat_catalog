@@ -96,7 +96,7 @@ def check_dicom_header(name):
         print("Detected Siemens Healthineers for Manufacturer (new version)")
         print(name)
         val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
-        print(val)
+        #print(val)
 
         found_line = False
         for line in val.splitlines():
