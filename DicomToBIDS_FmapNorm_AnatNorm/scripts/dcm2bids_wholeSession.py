@@ -112,8 +112,7 @@ def check_dicom_header(name):
                         fieldMapHeader = line_right.split("\\")
                         found_line = True
         if not found_line:
-            print("error, could not find (0021,1175) in {}".format(val.splitlines())
-
+            print("error, could not find (0021,1175) in {}".format(val.splitlines()))
 
     else:
         print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMapHeader")
