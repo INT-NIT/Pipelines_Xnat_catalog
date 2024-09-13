@@ -589,9 +589,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         if "SIEMENS" in manufacturer_item.value:
             print("Detected SIEMENS for Manufacturer (old version)")
 
-            #fieldMapHeader = d.get((0x0008, 0x0008), None)
+            fieldMapHeader = d.get((0x0008, 0x0008), None)
 
-        #elif "Siemens Healthineers" in manufacturer_item.value:
+        elif "Siemens Healthineers" in manufacturer_item.value:
 
             print("Detected Siemens Healthineers for Manufacturer (new version)")
 
