@@ -79,6 +79,51 @@ def zipdir(dirPath=None, zipFilePath=None, includeDirInZip=True):
             outFile.writestr(zipInfo, "")
     outFile.close()
 
+
+def check_dicom_header(name):
+    fieldMapHeader = ""
+
+    d = dicomLib.read_file(name)
+    print(d.keys())
+
+    manufacturer_item = d.get_item((0x0008, 0x0070))
+
+    if "SIEMENS" in manufacturer_item.value:
+        print("Detected SIEMENS for Manufacturer (old version)")
+        fieldMapHeader = d.get((0x0008, 0x0008), None)
+
+    elif "Siemens Healthineers" in manufacturer_item.value:
+        print("Detected Siemens Healthineers for Manufacturer (new version)")
+        print(name)
+        val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
+        print(val)
+
+        found_line = False
+        for line in val.splitlines():
+            #print(line)
+            if "(0021,1175)" in line and not found_line:
+                print("*** {}".format(line))
+                if len(line.split("["))== 2:
+                    line_left = line.split("[")[1]
+                    print(line_left)
+                    if len(line_left.split("]")) == 2:
+                        line_right = line_left.split("]")[0]
+                        print(line_right)
+                        fieldMapHeader = line_right.split("\\")
+                        found_line = True
+        if not found_line:
+            print("error, could not find (0021,1175) in {}".format(val.splitlines())
+
+
+    else:
+        print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMapHeader")
+
+    print("fieldMapHeader :", fieldMapHeader)
+
+    return fieldMapHeader
+
+
+
 BIDSVERSION = "1.0.1"
 
 parser = argparse.ArgumentParser(description="Run dcm2niix on every file in a session")
@@ -577,47 +622,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
     (name, pathDict) = dicomFileList[0]
     download(name, pathDict)
-
-    def check_dicom_header(name):
-        fieldMapHeader = ""
-
-        d = dicomLib.read_file(name)
-        print(d.keys())
-
-        manufacturer_item = d.get_item((0x0008, 0x0070))
-
-        if "SIEMENS" in manufacturer_item.value:
-            print("Detected SIEMENS for Manufacturer (old version)")
-
-            fieldMapHeader = d.get((0x0008, 0x0008), None)
-
-        elif "Siemens Healthineers" in manufacturer_item.value:
-
-            print("Detected Siemens Healthineers for Manufacturer (new version)")
-
-            print(name)
-            val = subprocess.check_output(["dcmdump", name], universal_newlines=True)
-            print(val)
-            for line in val.splitlines():
-                print(line)
-                if "(0021,1175)" in line:
-                    print("*** {}".format(line))
-                    if len(line.split("["))== 2:
-                        line_left = line.split("[")[1]
-                        print(line_left)
-                        if len(line_left.split("]")) == 2:
-                            line_right = line_left.split("]")[0]
-                            print(line_right)
-                            fieldMapHeader = line_right.split("\\")
-                            print(fieldMapHeader)
-            #print(fieldMapHeader)
-
-        else:
-            print("Warning, Manufacturer = " + manufacturer_item.value + " is unknown, no fieldMapHeader")
-
-
-        return fieldMapHeader
-
 
 
     if usingDicom:
