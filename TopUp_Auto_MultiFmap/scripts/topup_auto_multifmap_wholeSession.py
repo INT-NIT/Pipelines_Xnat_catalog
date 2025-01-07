@@ -192,8 +192,10 @@ for scan in scanRequestResultList:
 
             for desc in splitdesc:
                 if desc.startswith("Fieldmap") and desc[-1].isdigit():
-
                     index_run = desc[-1]
+
+                if desc.startswith("FieldmapFH"):
+                    index_run = 'FH'
 
             print(index_run)
 
