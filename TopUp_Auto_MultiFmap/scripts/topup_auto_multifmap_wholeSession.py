@@ -336,6 +336,7 @@ print("Finished dict_dico_files")
 print(dict_dico_files)
 
 print("*********************** now running topup part of the script")
+0/0
 
 for index, dico_files in dict_dico_files.iteritems():
 
