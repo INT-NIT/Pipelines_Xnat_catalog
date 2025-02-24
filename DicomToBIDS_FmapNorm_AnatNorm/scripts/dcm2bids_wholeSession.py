@@ -760,10 +760,14 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 print(file_name)
                 print("echo" not in file_name )
 
+                if file_name.endswith("bolda"):
+                    print("TMP: seq with bolda found= ", file_name)
+                    continue
+
                 extension = ".".join(point_split[1:])
 
                 if "echo" not in file_name:
-                    if file_name != bidsname:
+                    if file_name != bidsname :
                         print "Renaming file {} to {}".format(f, bidsname+"."+extension)
                         os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
                 else:
