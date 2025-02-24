@@ -758,7 +758,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 file_name = point_split[0]
                 print(file_name)
-                print("echo" not in file_name )
 
                 if file_name.endswith("bolda"):
                     print("TMP: seq with bolda found= ", file_name)
