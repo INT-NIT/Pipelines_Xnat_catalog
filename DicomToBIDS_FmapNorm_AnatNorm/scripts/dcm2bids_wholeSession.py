@@ -762,6 +762,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 if file_name.endswith("bolda"):
                     print("TMP: seq with bolda found= ", file_name)
+                    os.remove(os.path.join(scanBidsDir, f))
+
+                    print("TMP: deleted ",f )
                     continue
 
                 extension = ".".join(point_split[1:])
