@@ -747,7 +747,13 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             ### checking if bidsname have been modified:
 
+            print("TMP: scanBidsDir= ", scanBidsDir)
+            print("TMP:  os.listdir(scanBidsDir)= ",  os.listdir(scanBidsDir))
+
             for f in os.listdir(scanBidsDir):
+
+                print("TMP: f= ", f)
+
                 point_split = f.split(".")
 
                 file_name = point_split[0]
