@@ -847,38 +847,38 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                         store_previous_task_files.append(nii_bids_file)
 
-            # Modify json if epi
-            if "epi" in bidsname:
-                print("Modifying json for epi")
+                # Modify json if epi
+                if "epi" in bidsname:
+                    print("Modifying json for epi")
 
-                json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-                if 'dir-PA' in bidsname:
-                    print("fmap PA found")
-                    fmap_PA = True
-                elif 'dir-AP' in bidsname:
-                    print("fmap AP found")
-                    fmap_AP = True
+                    if 'dir-PA' in bidsname:
+                        print("fmap PA found")
+                        fmap_PA = True
+                    elif 'dir-AP' in bidsname:
+                        print("fmap AP found")
+                        fmap_AP = True
 
-                json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
+                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
 
-                new_json_contents = {
-                    'B0FieldIdentifier': "B0map" + str(index_bmap),
-                    "IntendedFor": store_previous_task_files}
+                    new_json_contents = {
+                        'B0FieldIdentifier': "B0map" + str(index_bmap),
+                        "IntendedFor": store_previous_task_files}
 
-                with open(json_bids_file) as f:
-                    data = json.load(f)
+                    with open(json_bids_file) as f:
+                        data = json.load(f)
 
-                data.update(new_json_contents)
+                    data.update(new_json_contents)
 
-                with open(json_bids_file, 'w') as f:
-                    json.dump(data, f)
+                    with open(json_bids_file, 'w') as f:
+                        json.dump(data, f)
 
-                if fmap_PA and fmap_AP:
-                    fmap_PA = False
-                    fmap_AP = False
-                    index_bmap = index_bmap+1
-                    store_previous_task_files = []
+                    if fmap_PA and fmap_AP:
+                        fmap_PA = False
+                        fmap_AP = False
+                        index_bmap = index_bmap+1
+                        store_previous_task_files = []
 
         else:
             # call dcm2nii for converting ima files
