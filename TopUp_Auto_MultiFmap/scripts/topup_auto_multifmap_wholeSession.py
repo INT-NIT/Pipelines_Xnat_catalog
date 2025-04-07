@@ -210,7 +210,6 @@ for scan in scanRequestResultList:
 
 
                 r_files = get(filesURL_json, params={"format": "json"})
-                print(r_files)
 
                 pathDict = [val for val in \
                     r_files.json()["ResultSet"]["Result"]][0]
@@ -336,7 +335,6 @@ print("Finished dict_dico_files")
 print(dict_dico_files)
 
 print("*********************** now running topup part of the script")
-0/0
 
 for index, dico_files in dict_dico_files.iteritems():
 

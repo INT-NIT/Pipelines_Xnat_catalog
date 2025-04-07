@@ -718,7 +718,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
     # Convert the differences
 
-    if "BOLD_ME" in seriesdesc or "task-ME" in seriesdesc:
+    if "ME" in seriesdesc or "ME" in seriesdesc:
         base = base + "echo-%e_"
         print (base)
 
