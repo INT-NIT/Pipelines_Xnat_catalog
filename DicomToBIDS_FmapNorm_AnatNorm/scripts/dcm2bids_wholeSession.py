@@ -781,10 +781,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             # Modify json if task-
 
             print(bidsname)
-            print("task-ME" in bidsname)
+            print("ME" in bidsname)
 
-            if "task-ME" in bidsname:
-                print("task-ME found, skipping")
+            if "ME" in bidsname:
+                print("ME found, skipping")
+
             else:
 
                 list_task = [atom.startswith("task") and len(atom.split("-")) == 2
