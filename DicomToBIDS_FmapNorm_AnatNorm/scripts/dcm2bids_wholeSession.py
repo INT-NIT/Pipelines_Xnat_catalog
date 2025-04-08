@@ -754,6 +754,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print("TMP: scanBidsDir= ", scanBidsDir)
             print("TMP:  os.listdir(scanBidsDir)= ",  os.listdir(scanBidsDir))
 
+            list_file_size = []
+            list_file = []
+
             for f in os.listdir(scanBidsDir):
 
                 print("TMP: f= ", f)
@@ -762,18 +765,19 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 file_name = point_split[0]
                 print(file_name)
-                print(file_name.endswith("bolda"))
-
-                if file_name.endswith("bolda"):
-                    print("TMP: seq with bolda found= ", file_name)
-                    os.remove(os.path.join(scanBidsDir, f))
-
-                    print("TMP: deleted ",f )
-                    continue
 
                 extension = ".".join(point_split[1:])
 
+                print(extension)
+
                 if "echo" not in file_name:
+
+                    if extension != "json":
+                        list_file_size.append(
+                            os.path.getsize(os.path.join(scanBidsDir, f)))
+
+                        list_file.append(file_name)
+
                     if file_name != bidsname :
                         print "Renaming file {} to {}".format(f, bidsname+"."+extension)
                         os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
@@ -781,6 +785,45 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     print("found echo in {}, skipping rename".format(file_name))
                     print(os.listdir(scanBidsDir))
                     print(bidsname+"."+extension)
+
+            print(list_file)
+            print(list_file_size)
+
+            if len(list_file_size) == 2:
+
+                order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
+
+                print(order)
+
+                print("First:")
+
+                print(list_file[order[0]])
+                print(list_file_size[order[0]])
+
+                print("Second:")
+
+                print(list_file[order[1]])
+                print(list_file_size[order[1]])
+
+                assert os.path.exists(
+                    os.path.join(
+                        scanBidsDir, list_file[order[1]] + ".nii.gz")), \
+                    "Error with {}".format(list_file[order[1]] + ".nii.gz")
+
+                os.remove(
+                    os.path.join(scanBidsDir,
+                                 list_file[order[1]] + ".nii.gz"))
+
+                assert os.path.exists(
+                    os.path.join(
+                        scanBidsDir, list_file[order[1]] + ".json")), \
+                    "Error with {}".format(list_file[order[1]] + ".json")
+
+                os.remove(
+                    os.path.join(scanBidsDir,
+                                 list_file[order[1]] + ".json"))
+
+
 
             # Modify json if task-
 
