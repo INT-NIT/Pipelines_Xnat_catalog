@@ -739,9 +739,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                         list_file.append(file_name)
 
-                    if file_name != bidsname :
-                        print "Renaming file {} to {}".format(f, bidsname+"."+extension)
-                        os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
+                    #if file_name != bidsname :
+                        #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
+                        #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
                 else:
                     print("found echo in {}, skipping rename".format(file_name))
                     print(os.listdir(scanBidsDir))
@@ -757,7 +757,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 #order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
 
-                Print("Order:")
+                print("Order:")
                 print(order)
 
                 print("First:")
