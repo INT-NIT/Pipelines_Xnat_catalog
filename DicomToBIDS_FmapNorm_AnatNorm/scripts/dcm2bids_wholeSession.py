@@ -422,11 +422,11 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if any([atom == "bold" for atom in splitname[:-1]]):
         splitname.remove('bold')
 
-    if "ME" in seriesdesc or "ME" in seriesdesc:
+    if "ME" in seriesdesc:
         assert len(splitname) > 2, "Error with {}".format(splitname)
 
         print(splitname)
-        splitname.insert(-2, "echo-%e")
+        splitname.insert(-1, "echo-%e")
         print("After adding echo")
         print(splitname)
 
@@ -764,8 +764,12 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 print(list_file[order[-1]])
                 print(list_file_size[order[-1]])
+
                 print(os.path.join(
                         scanBidsDir, list_file[order[-1]] + ".nii.gz"))
+
+                print(os.path.join(
+                        scanBidsDir, list_file[order[-1]] + ".json"))
 
                 print("Second:")
 
