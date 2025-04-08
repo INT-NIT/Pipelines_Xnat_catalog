@@ -752,16 +752,20 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             if len(list_file_size) == 2:
 
-                order = sorted(range(len(s)), key=lambda k: s[k])
+                order = sorted(range(len(list_file_size)),
+                               key=lambda k: list_file_size[k])
 
                 #order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
 
+                Print("Order:")
                 print(order)
 
                 print("First:")
 
                 print(list_file[order[-1]])
                 print(list_file_size[order[-1]])
+                print(os.path.join(
+                        scanBidsDir, list_file[order[-1]] + ".nii.gz"))
 
                 print("Second:")
 
