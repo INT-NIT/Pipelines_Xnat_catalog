@@ -422,6 +422,14 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if any([atom == "bold" for atom in splitname[:-1]]):
         splitname.remove('bold')
 
+    if "ME" in seriesdesc or "ME" in seriesdesc:
+        assert len(splitname) > 2, f"Error with {splitname}"
+
+        print(splitname)
+        splitname.insert(-2, "echo-%e")
+        print("After adding echo")
+        print(splitname
+
     print(splitname)
     match = "_".join(splitname)
 
@@ -717,10 +725,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         os.remove(os.path.join(scanBidsDir, f))
 
     # Convert the differences
-
-    if "ME" in seriesdesc or "ME" in seriesdesc:
-        base = base + "echo-%e_"
-        print (base)
 
     bidsname = base + bidsname
     print "Base " + base + " series " + seriesdesc + " match " + bidsname
