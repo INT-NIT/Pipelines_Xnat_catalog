@@ -783,7 +783,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 os.remove(
                     os.path.join(scanBidsDir,
-                                 list_file[order[1]] + ".nii.gz"))
+                                 list_file[order[0]] + ".nii.gz"))
 
                 assert os.path.exists(
                     os.path.join(
@@ -792,7 +792,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 os.remove(
                     os.path.join(scanBidsDir,
-                                 list_file[order[1]] + ".json"))
+                                 list_file[order[0]] + ".json"))
 
                 if list_file[order[1]].endswith("bolda"):
                     print("Renaming {}".format(list_file[order[1]]))
