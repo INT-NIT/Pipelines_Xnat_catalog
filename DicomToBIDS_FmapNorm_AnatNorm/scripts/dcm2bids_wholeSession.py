@@ -423,7 +423,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         splitname.remove('bold')
 
     if "ME" in seriesdesc or "ME" in seriesdesc:
-        assert len(splitname) > 2, f"Error with {splitname}"
+        assert len(splitname) > 2, "Error with {}".format(splitname)
 
         print(splitname)
         splitname.insert(-2, "echo-%e")
