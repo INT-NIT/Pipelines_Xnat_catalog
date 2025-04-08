@@ -752,19 +752,21 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             if len(list_file_size) == 2:
 
-                order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
+                order = sorted(range(len(s)), key=lambda k: s[k])
+
+                #order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
 
                 print(order)
 
                 print("First:")
 
-                print(list_file[order[0]])
-                print(list_file_size[order[0]])
+                print(list_file[order[-1]])
+                print(list_file_size[order[-1]])
 
                 print("Second:")
 
-                print(list_file[order[1]])
-                print(list_file_size[order[1]])
+                print(list_file[order[0]])
+                print(list_file_size[order[0]])
 
                 assert os.path.exists(
                     os.path.join(
