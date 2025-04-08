@@ -762,14 +762,14 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 print("First:")
 
-                print(list_file[order[-1]])
-                print(list_file_size[order[-1]])
+                print(list_file[order[1]])
+                print(list_file_size[order[1]])
 
                 print(os.path.join(
-                        scanBidsDir, list_file[order[-1]] + ".nii.gz"))
+                        scanBidsDir, list_file[order[1]] + ".nii.gz"))
 
                 print(os.path.join(
-                        scanBidsDir, list_file[order[-1]] + ".json"))
+                        scanBidsDir, list_file[order[1]] + ".json"))
 
                 print("Second:")
 
@@ -778,8 +778,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 assert os.path.exists(
                     os.path.join(
-                        scanBidsDir, list_file[order[1]] + ".nii.gz")), \
-                    "Error with {}".format(list_file[order[1]] + ".nii.gz")
+                        scanBidsDir, list_file[order[0]] + ".nii.gz")), \
+                    "Error with {}".format(list_file[order[0]] + ".nii.gz")
 
                 os.remove(
                     os.path.join(scanBidsDir,
@@ -787,27 +787,31 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                 assert os.path.exists(
                     os.path.join(
-                        scanBidsDir, list_file[order[1]] + ".json")), \
-                    "Error with {}".format(list_file[order[1]] + ".json")
+                        scanBidsDir, list_file[order[0]] + ".json")), \
+                    "Error with {}".format(list_file[order[0]] + ".json")
 
                 os.remove(
                     os.path.join(scanBidsDir,
                                  list_file[order[1]] + ".json"))
 
-                if list_file[order[0]].endswith("bolda"):
-                    print("Renaming {}".format(list_file[order[0]]))
+                if list_file[order[1]].endswith("bolda"):
+                    print("Renaming {}".format(list_file[order[1]]))
 
                     os.rename(
                         os.path.join(
-                            scanBidsDir, list_file[order[0]] + ".nii.gz"),
+                            scanBidsDir, list_file[order[1]] + ".nii.gz"),
                         os.path.join(
-                            scanBidsDir, list_file[order[1]] + ".nii.gz"))
+                            scanBidsDir, list_file[order[0]] + ".nii.gz"))
 
                     os.rename(
                         os.path.join(
-                            scanBidsDir, list_file[order[0]] + ".json"),
+                            scanBidsDir, list_file[order[1]] + ".json"),
                         os.path.join(
-                            scanBidsDir, list_file[order[1]] + ".json"))
+                            scanBidsDir, list_file[order[0]] + ".json"))
+
+            elif len(list_file_size) >2:
+                print("***** Error, not for echo, skipping")
+                continue
 
             # Modify json if task-
 
