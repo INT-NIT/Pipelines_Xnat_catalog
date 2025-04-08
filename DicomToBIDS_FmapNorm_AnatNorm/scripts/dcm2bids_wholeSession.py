@@ -428,7 +428,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         print(splitname)
         splitname.insert(-2, "echo-%e")
         print("After adding echo")
-        print(splitname
+        print(splitname)
 
     print(splitname)
     match = "_".join(splitname)
