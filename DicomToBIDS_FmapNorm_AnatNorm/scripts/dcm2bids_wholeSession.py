@@ -433,44 +433,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     print(splitname)
     match = "_".join(splitname)
 
-    ## Check for multiples
-    #if match in multiples:
-        ## insert run-0x
-        #run = 'run-%02d' % multiples[match]
-        #splitname.insert(len(splitname) - 1, run)
-
-        ## decrement count
-        #multiples[match] -= 1
-
-        ## rejoin as string
-        #bidsname = "_".join(splitname)
-
-        #print("****Multiple****" ,bidsname)
-
-    #else:
-        #list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
-            #for atom in splitname]
-        #print list_run
-        #if any(list_run):
-
-            #print("**** found error with run name: %s"%match)
-
-            #index = list_run.index(True)
-            #run_atom = splitname[index]
-            #print("run_atom: ", run_atom)
-
-            #run_index = run_atom.strip('run')
-
-            #print("run_index: ", run_index)
-            #assert run_index.isdigit(), "Error %s should be digit" %run_index
-
-            #splitname[index] = "run-%02d"%int(run_index)
-            #bidsname = "_".join(splitname)
-            #print ("**** final name :%s"%bidsname)
-
-        #else:
-            #bidsname = match
-
     list_run = [atom.startswith("run") and len(atom.split("-"))!= 2 \
         for atom in splitname]
 
@@ -771,7 +733,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 print(extension)
 
                 if "echo" not in file_name:
-
                     if extension != "json":
                         list_file_size.append(
                             os.path.getsize(os.path.join(scanBidsDir, f)))
@@ -823,7 +784,20 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                     os.path.join(scanBidsDir,
                                  list_file[order[1]] + ".json"))
 
+                if list_file[order[0]].endswith("bolda"):
+                    print("Renaming {}".format(list_file[order[0]]))
 
+                    os.rename(
+                        os.path.join(
+                            scanBidsDir, list_file[order[0]] + ".nii.gz"),
+                        os.path.join(
+                            scanBidsDir, list_file[order[1]] + ".nii.gz"))
+
+                    os.rename(
+                        os.path.join(
+                            scanBidsDir, list_file[order[0]] + ".json"),
+                        os.path.join(
+                            scanBidsDir, list_file[order[1]] + ".json"))
 
             # Modify json if task-
 
