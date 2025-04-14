@@ -731,8 +731,9 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                 extension = ".".join(point_split[1:])
 
                 print(extension)
+                print("ROI1: ", file_name.endswith("ROI1"))
 
-                if "echo" not in file_name:
+                if "echo" not in file_name and not file_name.endswith("ROI1"):
                     if extension != "json":
                         list_file_size.append(
                             os.path.getsize(os.path.join(scanBidsDir, f)))
