@@ -810,9 +810,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
                         os.path.join(
                             scanBidsDir, list_file[order[0]] + ".json"))
 
-            elif len(list_file_size) >2:
+            elif len(list_file_size) > 2:
                 print("***** Error, not for echo, skipping")
-                continue
 
             # Modify json if task-
 
