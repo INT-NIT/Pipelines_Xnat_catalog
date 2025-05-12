@@ -813,8 +813,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             elif len(list_file_size) > 2:
                 print("***** Error, not for echo, skipping")
 
-            # Modify json if task-
-
             print(bidsname)
             print("ME" in bidsname)
 
@@ -823,6 +821,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             else:
 
+                # Modify json if task-
                 list_task = [atom.startswith("task") and len(atom.split("-")) == 2
                     and not atom.endswith("ME") for atom in splitname]
 
