@@ -422,7 +422,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if any([atom == "bold" for atom in splitname[:-1]]):
         splitname.remove('bold')
 
-    if "ME" in seriesdesc and "MEAN" not in seriesdesc:
+    if ("ME" in seriesdesc and "MEAN" not in seriesdesc) or "MULTIECHO" in seriesdesc:
         assert len(splitname) > 2, "Error with {}".format(splitname)
 
         print(splitname)
