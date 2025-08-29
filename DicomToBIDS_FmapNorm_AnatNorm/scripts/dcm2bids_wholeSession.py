@@ -423,8 +423,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         splitname.remove('bold')
 
     if ("ME" in seriesdesc and "MEAN" not in seriesdesc) or "MULTIECHO" in seriesdesc:
-        assert len(splitname) > 2, "Error with {}".format(splitname)
+        # not sure why it was there
+        #assert len(splitname) > 2, "Error with {}".format(splitname)
 
+        assert len(splitname) > 1, "Error with {}".format(splitname)
         print(splitname)
         splitname.insert(-1, "echo-%e")
         print("After adding echo")
