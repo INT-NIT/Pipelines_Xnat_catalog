@@ -422,7 +422,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if any([atom == "bold" for atom in splitname[:-1]]):
         splitname.remove('bold')
 
-    if ("ME" in seriesdesc and "MEAN" not in seriesdesc) or "MULTIECHO" in seriesdesc:
+    if ("ME" in seriesdesc and "MEAN" not in seriesdesc) or "MULTIECHO" in seriesdesc or "DUREE" in seriesdesc:
         # not sure why it was there
         #assert len(splitname) > 2, "Error with {}".format(splitname)
 
@@ -837,8 +837,8 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
                     print("**** found task- with run name: {}".format(task))
 
-                    json_bids_file = os.path.join(scanBidsDir,
-                                                  bidsname)+".json"
+                    json_bids_file = os.path.join(
+                        scanBidsDir, bidsname + ".json")
 
                     if "bold" in splitname:
                         new_json_contents = {
