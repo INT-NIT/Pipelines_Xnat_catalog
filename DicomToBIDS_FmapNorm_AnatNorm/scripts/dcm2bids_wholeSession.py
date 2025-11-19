@@ -818,8 +818,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print(bidsname)
             print("ME" in bidsname)
 
-            if "ME" in bidsname:
-                print("ME found, skipping")
+            print("DUREE" in bidsname)
+
+            if "ME" in bidsname or "DUREE" in bidsname:
+                print("ME / DUREE found, skipping")
 
             else:
 
