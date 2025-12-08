@@ -243,10 +243,6 @@ for scan in scanRequestResultList:
                 if key is params.keys()
                     assert "fmap_AP_file" in params.keys(), "Error missing fmap_AP_file before changing dico_file"
 
-fmap_PA_file = dico_files["fmap_PA_file"]
-
-json_AP_file = dico_files["json_AP_file"]
-json_PA_file = dico_files["json_PA_file"
                     dict_dico_files.append(dico_files)
 
                     dico_files[key] = loc_file
@@ -352,6 +348,12 @@ if direction_AP == "j-":
 elif direction_AP == "j":
     phase_AP = '0 1 0'
 
+elif direction_AP == "i-":
+    phase_AP = '-1 0 0'
+
+elif direction_AP == "i":
+    phase_AP = '1 0 0'
+
 else:
     print("Error, wrong encoding dir for AP (now {})".format(direction_AP))
 
@@ -369,6 +371,12 @@ if direction_PA == "j-":
 
 elif direction_PA == "j":
     phase_PA = '0 1 0'
+
+if direction_PA == "i-":
+    phase_PA = '-1 0 0'
+
+elif direction_PA == "i":
+    phase_PA = '1 0 0'
 
 else:
     print("Error, wrong encoding dir for PA (now {})".format(direction_PA))
