@@ -403,6 +403,12 @@ for index, dico_files in dict_dico_files.iteritems():
     elif direction_AP == "j":
         phase_AP = '0 1 0'
 
+    elif direction_AP == "i-":
+        phase_AP = '-1 0 0'
+
+    elif direction_AP == "i":
+        phase_AP = '1 0 0'
+
     else:
         print("Error, wrong encoding dir for AP (now {})".format(direction_AP))
 
@@ -421,10 +427,17 @@ for index, dico_files in dict_dico_files.iteritems():
     elif direction_PA == "j":
         phase_PA = '0 1 0'
 
+    if direction_PA == "i-":
+        phase_PA = '-1 0 0'
+
+    elif direction_PA == "i":
+        phase_PA = '1 0 0'
+
     else:
         print("Error, wrong encoding dir for PA (now {})".format(direction_PA))
 
     assert phase_AP != phase_PA, "Error, both phase cannot be equal"
+
 
     ##################################### Running
     param_AP_PA_file = os.path.join(topupdir, subject+index + "_acqparamsAP_PA.txt")
