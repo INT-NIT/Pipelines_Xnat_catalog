@@ -185,9 +185,9 @@ for scan in scanRequestResultList:
 
         print("Scan {} (desc = {}) a BIDS structure".format(
             scanid,scan['series_description'] ))
-
-        if "RR" in splitdesc:
-            continue
+        #
+        # if "RR" in splitdesc:
+        #     continue
 
         if ("PA" in splitdesc or "AP" in splitdesc) and "topup" in splitdesc:
             for label in ["BIDS","NIFTI"]:
