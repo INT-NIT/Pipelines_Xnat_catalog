@@ -713,46 +713,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print("TMP: scanBidsDir= ", scanBidsDir)
             print("TMP:  os.listdir(scanBidsDir)= ",  os.listdir(scanBidsDir))
 
-            list_file_size = []
-            list_file = []
-
-            for f in os.listdir(scanBidsDir):
-
-                print("TMP: f= ", f)
-
-                point_split = f.split(".")
-
-                file_name = point_split[0]
-                print(file_name)
-
-                extension = ".".join(point_split[1:])
-
-                print(extension)
-                print("ROI1: ", file_name.endswith("ROI1"))
-
-                if "echo" not in file_name and not file_name.endswith("ROI1"):
-                    if extension != "json":
-                        list_file_size.append(
-                            os.path.getsize(os.path.join(scanBidsDir, f)))
-
-                        list_file.append(file_name)
-
-                    #if file_name != bidsname :
-                        #print "Renaming file {} to {}".format(f, bidsname+"."+extension)
-                        #os.rename(os.path.join(scanBidsDir,f), os.path.join(scanBidsDir, bidsname+"."+extension))
-                else:
-                    print("found echo in {}, skipping rename".format(file_name))
-                    print(os.listdir(scanBidsDir))
-                    print(bidsname+"."+extension)
-
-            print(list_file)
-            print(list_file_size)
-
-            print(bidsname)
-            print("ME" in bidsname)
-
-            print("DUREE" in bidsname)
-
         else:
             # call dcm2nii for converting ima files
             print subprocess.check_output("dcm2nii -b @PIPELINE_DIR_PATH@/catalog/DicomToBIDS/resources/dcm2nii.ini -g y -f Y -e N -p N -d N -o {} {}".format(scanBidsDir, scanDicomDir).split())
@@ -761,7 +721,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
 
             # there should only be one file in this folder
             for files in glob.glob(os.path.join(scanBidsDir, "*.nii.gz")):
+                print(files)
+                print(os.path.join(scanBidsDir, bidsname + ".nii.gz"))
                 os.rename(files, os.path.join(scanBidsDir, bidsname + ".nii.gz"))
+
 
             # Create BIDS sidecar file from IMA XML
             imaSessionURL = host + "/data/archive/experiments/%s/scans/%s" % (session, scanid)
