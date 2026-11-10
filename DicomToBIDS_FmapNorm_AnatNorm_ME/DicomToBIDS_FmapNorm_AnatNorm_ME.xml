@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Pipeline xmlns="http://nrg.wustl.edu/pipeline" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://nrg.wustl.edu/pipeline ..\schema\pipeline.xsd" >
-    <name>DicomToBIDS_FMap_AnatNorm</name>
-    <location>DicomToBIDS_FMap_AnatNorm</location>
+    <name>DicomToBIDS_FMap_AnatNorm_ME</name>
+    <location>DicomToBIDS_FMap_AnatNorm_ME</location>
     <description>Same as DicomToBIDS, with FieldMap Norm choice as parameter, and Anat Norm as a second parameter.</description>
     <documentation>
         <authors>
@@ -93,7 +93,7 @@
             </resource>
         </step>
         <step id="RUN" description="Download all DICOMs. Convert each series into a 4d NIFTI file with BIDS supplements using dcm2niix. Upload NIFTI file." workdirectory="^/Pipeline/parameters/parameter[name='workdir']/values/unique/text()^">
-            <resource name="dcm2bids_wholeSession" location="DicomToBIDS_FmapNorm_AnatNorm/resources">
+            <resource name="dcm2bids_wholeSession_ME" location="DicomToBIDS_FmapNorm_AnatNorm_ME/resources">
                 <argument id="host">
                     <value>^/Pipeline/parameters/parameter[name='host']/values/unique/text()^</value>
                 </argument>
