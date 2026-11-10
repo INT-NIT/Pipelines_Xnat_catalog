@@ -401,11 +401,6 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
         else:
             match = val
 
-
-    if seriesdesc.startswith("ABCD"):
-        print("Found ABCD session, skipping")
-        continue
-
     # split before last _
     splitname = match.split("_")
 
@@ -422,7 +417,7 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
     if any([atom == "bold" for atom in splitname[:-1]]):
         splitname.remove('bold')
 
-    if ("ME" in seriesdesc and "MEAN" not in seriesdesc) or "MULTIECHO" in seriesdesc or "DUREE" in seriesdesc:
+    if ("bold" in seriesdesc):
         # not sure why it was there
         #assert len(splitname) > 2, "Error with {}".format(splitname)
 
@@ -753,170 +748,10 @@ for scanid, seriesdesc in zip(reversed(scanIDList), reversed(seriesDescList)):
             print(list_file)
             print(list_file_size)
 
-            if len(list_file_size) == 2:
-
-                order = sorted(range(len(list_file_size)),
-                               key=lambda k: list_file_size[k])
-
-                #order = [i[0] for i in sorted(enumerate(list_file_size), key=lambda x:x[1])]
-
-                print("Order:")
-                print(order)
-
-                print("First:")
-
-                print(list_file[order[1]])
-                print(list_file_size[order[1]])
-
-                print(os.path.join(
-                        scanBidsDir, list_file[order[1]] + ".nii.gz"))
-
-                print(os.path.join(
-                        scanBidsDir, list_file[order[1]] + ".json"))
-
-                print("Second:")
-
-                print(list_file[order[0]])
-                print(list_file_size[order[0]])
-
-                assert os.path.exists(
-                    os.path.join(
-                        scanBidsDir, list_file[order[0]] + ".nii.gz")), \
-                    "Error with {}".format(list_file[order[0]] + ".nii.gz")
-
-                os.remove(
-                    os.path.join(scanBidsDir,
-                                 list_file[order[0]] + ".nii.gz"))
-
-                assert os.path.exists(
-                    os.path.join(
-                        scanBidsDir, list_file[order[0]] + ".json")), \
-                    "Error with {}".format(list_file[order[0]] + ".json")
-
-                os.remove(
-                    os.path.join(scanBidsDir,
-                                 list_file[order[0]] + ".json"))
-
-                if list_file[order[1]].endswith("bolda"):
-                    print("Renaming {}".format(list_file[order[1]]))
-
-                    os.rename(
-                        os.path.join(
-                            scanBidsDir, list_file[order[1]] + ".nii.gz"),
-                        os.path.join(
-                            scanBidsDir, list_file[order[0]] + ".nii.gz"))
-
-                    os.rename(
-                        os.path.join(
-                            scanBidsDir, list_file[order[1]] + ".json"),
-                        os.path.join(
-                            scanBidsDir, list_file[order[0]] + ".json"))
-
-            elif len(list_file_size) > 2:
-                print("***** Error, not for echo, skipping")
-
             print(bidsname)
             print("ME" in bidsname)
 
             print("DUREE" in bidsname)
-
-            if "ME" in bidsname or "DUREE" in bidsname:
-                print("ME / DUREE found, skipping")
-
-            else:
-
-                # Modify json if task-
-                list_task = [atom.startswith("task") and len(atom.split("-")) == 2
-                    and not atom.endswith("ME") for atom in splitname]
-
-                print(list_task)
-
-                if any(list_task):
-
-                    task = splitname[list_task.index(True)].split("-")[1]
-
-                    print("**** found task- with run name: {}".format(task))
-
-                    json_bids_file = os.path.join(
-                        scanBidsDir, bidsname + ".json")
-
-                    if "bold" in splitname:
-                        new_json_contents = {
-                            'TaskName': task,
-                            'B0FieldSource': "B0map" + str(index_bmap)}
-                    else:
-                        new_json_contents = {
-                            'TaskName': task}
-
-                    with open(json_bids_file) as f:
-                        data = json.load(f)
-
-                    data.update(new_json_contents)
-
-                    with open(json_bids_file, 'w') as f:
-                        json.dump(data, f)
-
-                    if "bold" in splitname:
-
-                        print("Found bold, preparing IntendedFor with subject " + subject)
-                        split_ses = subject.split("_")
-                        print(split_ses)
-                        if len(split_ses) >= 2:
-                            print(split_ses[1])
-                            if split_ses[1].startswith("ses-"):
-                                session_id = split_ses[1]
-
-                                nii_bids_file = os.path.join(
-                                    session_id, "func",
-                                    bidsname+".nii.gz")
-                            else:
-
-                                nii_bids_file = os.path.join(
-                                    "func",
-                                    bidsname+".nii.gz")
-
-                        else:
-
-                            nii_bids_file = os.path.join(
-                                "func",
-                                bidsname+".nii.gz")
-
-                        print(nii_bids_file)
-
-                        store_previous_task_files.append(nii_bids_file)
-
-                # Modify json if epi
-                if "epi" in bidsname:
-                    print("Modifying json for epi")
-
-                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
-
-                    if 'dir-PA' in bidsname:
-                        print("fmap PA found")
-                        fmap_PA = True
-                    elif 'dir-AP' in bidsname:
-                        print("fmap AP found")
-                        fmap_AP = True
-
-                    json_bids_file = os.path.join(scanBidsDir, bidsname)+".json"
-
-                    new_json_contents = {
-                        'B0FieldIdentifier': "B0map" + str(index_bmap),
-                        "IntendedFor": store_previous_task_files}
-
-                    with open(json_bids_file) as f:
-                        data = json.load(f)
-
-                    data.update(new_json_contents)
-
-                    with open(json_bids_file, 'w') as f:
-                        json.dump(data, f)
-
-                    if fmap_PA and fmap_AP:
-                        fmap_PA = False
-                        fmap_AP = False
-                        index_bmap = index_bmap+1
-                        store_previous_task_files = []
 
         else:
             # call dcm2nii for converting ima files
